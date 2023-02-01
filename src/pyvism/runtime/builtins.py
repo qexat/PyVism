@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum, auto
 from io import StringIO
@@ -14,7 +13,6 @@ __all__ = (
     "DEBUG_MODE_CHAR",
     "ESCAPABLE_CHARS",
     "MemoryValue",
-    "OldMode",
     "TargetKind",
     "target_kind_map",
     "Target",
@@ -24,8 +22,6 @@ __all__ = (
     "assign_type_map",
     "Mode",
     "NS_MODES",
-    "OLD_MODES",
-    "ESCAPABLE_MODES",
     "STREAM_IDS",
     "BufferMap",
     "StreamMap",
@@ -68,15 +64,6 @@ MemoryValue = (
     | dict[Any, Any]
     | None
 )
-
-
-class OldMode(Enum):
-    Default = auto()
-    String = auto()
-    Literal = auto()
-
-    # Implementation detail
-    Address = auto()
 
 
 class TargetKind(Enum):
@@ -141,16 +128,6 @@ NS_MODES = {
     "n": Mode.Normal,
     **{atchar: Mode.Assign for atchar in assign_type_map.keys()},
 }
-
-
-OLD_MODES: defaultdict[str, OldMode | None] = defaultdict(
-    lambda: None,
-    d=OldMode.Default,
-    s=OldMode.String,
-    l=OldMode.Literal,
-)
-
-ESCAPABLE_MODES = {OldMode.String, OldMode.Literal}
 
 
 STREAM_IDS = {"null": -1, "stdout": 0, "stderr": 1}
