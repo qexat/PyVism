@@ -432,6 +432,9 @@ class Compiler:
 
                 self.pos += 1
 
+            if self.errors:
+                break
+
             self.process_buffered()
             self.line_index += 1
             self.pos = 0
