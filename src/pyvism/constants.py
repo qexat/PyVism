@@ -7,7 +7,7 @@ __all__ = (
 )
 
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 
 MEMORY_MAX_ADDR = 0x10
 REGISTER_MAX_ADDR = 0x10
