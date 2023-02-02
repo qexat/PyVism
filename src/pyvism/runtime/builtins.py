@@ -12,6 +12,7 @@ __all__ = (
     "PRGM_MODE_CHAR",
     "DEBUG_MODE_CHAR",
     "ESCAPABLE_CHARS",
+    "DISCARDED_CHARS",
     "MemoryValue",
     "TargetKind",
     "target_kind_map",
@@ -50,6 +51,8 @@ ESCAPABLE_CHARS = {
     PRGM_MODE_CHAR: PRGM_MODE_CHAR,
     DEBUG_MODE_CHAR: DEBUG_MODE_CHAR,
 }
+
+DISCARDED_CHARS = {" "}
 
 
 MemoryValue = (
@@ -220,6 +223,6 @@ class ConstTypeDef(TypeDef):
 
 @dataclass
 class VarTypeDef(TypeDef):
-    line: int
+    line_number: int
     spos: int
     epos: int

@@ -20,9 +20,7 @@ Ts = TypeVarTuple("Ts")
 class VM:
     @dataclass
     class State:
-        memory: list[MemoryValue] = field(
-            default_factory=lambda: [None] * MEMORY_MAX_ADDR
-        )
+        memory: list[Any] = field(default_factory=lambda: [None] * MEMORY_MAX_ADDR)
         typing: list[type[MemoryValue]] = field(
             default_factory=lambda: [type(None)] * MEMORY_MAX_ADDR
         )
@@ -125,22 +123,32 @@ class InstructionSet:
             case _:
                 raise ValueError(f"{target}: bad instruction 'mov'")
 
+    @staticmethod
+    def _add(l: Any, r: Any) -> Any:
+        supports_add = (int, float, bool, str, bytes, list, tuple)  # type: ignore
+        if isinstance(l, supports_add) and isinstance(r, supports_add):
+            return l + r  # type: ignore
+        elif isinstance(l, set) and isinstance(r, set):
+            return l | r  # type: ignore
+
     @mnemonic
     @staticmethod
     def add(ms: VM.State, lsource: Target, rsource: Target) -> VM.State:
         laddr, raddr = lsource.address, rsource.address
         l, r = ms.memory[laddr], ms.memory[raddr]
 
-        if isinstance(l, int) and isinstance(r, int):
-            t = l + r
-        elif isinstance(l, str) and isinstance(r, str):
-            t = l + r
-        else:
-            type_compat_error("+", type(l), type(r))
-
-        ms.memory[laddr] = t
+        ms.memory[laddr] = l + r
 
         return ms
+
+    @staticmethod
+    def _sub(l: Any, r: Any) -> Any:
+        if isinstance(l, (int, set)) and isinstance(r, (int, set)):
+            return l - r  # type: ignore
+        elif isinstance(l, str) and isinstance(r, str):
+            return l.replace(r, "")
+        elif isinstance(l, (list, tuple)) and isinstance(r, (list, tuple)):
+            return type(l)(v for v in l if v not in r)  # type: ignore
 
     @mnemonic
     @staticmethod
@@ -148,14 +156,7 @@ class InstructionSet:
         laddr, raddr = lsource.address, rsource.address
         l, r = ms.memory[laddr], ms.memory[raddr]
 
-        if isinstance(l, int) and isinstance(r, int):
-            t = l - r
-        elif isinstance(l, str) and isinstance(r, str):
-            t = l.replace(r, "")
-        else:
-            type_compat_error("-", type(l), type(r))
-
-        ms.memory[laddr] = t
+        ms.memory[laddr] = InstructionSet._sub(l, r)
 
         return ms
 
@@ -165,16 +166,7 @@ class InstructionSet:
         laddr, raddr = lsource.address, rsource.address
         l, r = ms.memory[laddr], ms.memory[raddr]
 
-        if isinstance(l, int) and isinstance(r, int):
-            t = l * r
-        elif isinstance(l, str) and isinstance(r, int):
-            t = l * r
-        elif isinstance(l, int) and isinstance(r, str):
-            t = l * r
-        else:
-            type_compat_error("×", type(l), type(r))
-
-        ms.memory[laddr] = t
+        ms.memory[laddr] = l * r
 
         return ms
 
@@ -184,12 +176,7 @@ class InstructionSet:
         laddr, raddr = lsource.address, rsource.address
         l, r = ms.memory[laddr], ms.memory[raddr]
 
-        if isinstance(l, int) and isinstance(r, int):
-            t = l // r
-        else:
-            type_compat_error("/", type(l), type(r))
-
-        ms.memory[laddr] = t
+        ms.memory[laddr] = l // r
 
         return ms
 
@@ -199,12 +186,7 @@ class InstructionSet:
         laddr, raddr = lsource.address, rsource.address
         l, r = ms.memory[laddr], ms.memory[raddr]
 
-        if isinstance(l, int) and isinstance(r, int):
-            t = l % r
-        else:
-            type_compat_error("%", type(l), type(r))
-
-        ms.memory[laddr] = t
+        ms.memory[laddr] = l % r
 
         return ms
 
@@ -214,12 +196,7 @@ class InstructionSet:
         laddr, raddr = lsource.address, rsource.address
         l, r = ms.memory[laddr], ms.memory[raddr]
 
-        if isinstance(l, int) and isinstance(r, int):
-            t = divmod(l, r)
-        else:
-            type_compat_error("%", type(l), type(r))
-
-        ms.memory[laddr], ms.memory[raddr] = t
+        ms.memory[laddr], ms.memory[raddr] = divmod(l, r)
 
         return ms
 
@@ -277,4 +254,45 @@ instruction_map: dict[str, mnemonic[*tuple[Any, ...]]] = {
     "÷": InstructionSet.divmod,
     "p": InstructionSet.print,
     "f": InstructionSet.flush,
+}
+
+op_type_combinations: dict[mnemonic[*tuple[Any, ...]], set[tuple[type, ...]]] = {
+    InstructionSet.add: {
+        (int, int),
+        (int, bool),
+        (float, float),
+        (float, int),
+        (float, bool),
+        (str, str),
+        (bytes, bytes),
+        (list, list),
+        (tuple, tuple),
+        (set, set),
+    },
+    InstructionSet.sub: {
+        (int, int),
+        (str, str),
+        (list, list),
+        (set, set),
+        (tuple, tuple),
+    },
+    InstructionSet.mul: {
+        (int, int),
+        (int, bool),
+        (int, str),
+        (float, float),
+        (float, int),
+        (float, bool),
+        (str, int),
+        (str, bool),
+        (bytes, int),
+        (bytes, bool),
+        (list, int),
+        (list, bool),
+        (tuple, int),
+        (tuple, bool),
+    },
+    InstructionSet.intdiv: {(int, int), (int, bool)},
+    InstructionSet.modulo: {(int, int), (int, bool)},
+    InstructionSet.divmod: {(int, int), (int, bool)},
 }
