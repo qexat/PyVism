@@ -139,10 +139,10 @@ NS_MODES = {
 STREAM_IDS = {"null": -1, "stdout": 0, "stderr": 1}
 
 stream_endpoints = defaultdict(
-    lambda: sys.__stdout__,
+    lambda: sys.stdout,
     {
-        0: sys.__stdout__,
-        1: sys.__stderr__,
+        0: sys.stdout,
+        1: sys.stderr,
     },
 )
 
