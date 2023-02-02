@@ -278,3 +278,12 @@ instruction_map: dict[str, mnemonic[*tuple[Any, ...]]] = {
     "p": InstructionSet.print,
     "f": InstructionSet.flush,
 }
+
+op_type_combinations: dict[mnemonic[*tuple[Any, ...]], set[tuple[type, ...]]] = {
+    InstructionSet.add: {(int, int), (str, str)},
+    InstructionSet.sub: {(int, int), (str, str)},
+    InstructionSet.mul: {(int, int), (str, int), (int, str)},
+    InstructionSet.intdiv: {(int, int)},
+    InstructionSet.modulo: {(int, int)},
+    InstructionSet.divmod: {(int, int)},
+}
