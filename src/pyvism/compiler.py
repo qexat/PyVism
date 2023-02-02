@@ -458,7 +458,6 @@ class Compiler:
                 )
             )
             return None
-            # raise NotImplementedError(f"macro {char!r} is not implemented")
 
         MacroMap[macro_kind](self)
 
