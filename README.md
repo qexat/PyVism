@@ -6,7 +6,7 @@ Vism (/vɪzᵊm/) is an esoteric programming language inspired from Vi(m) keystr
 
 ## Specification
 
-Docs are coming soon!
+You can find the specification of the language [here](https://github.com/qexat/vism).
 
 ## PyVism
 
