@@ -1,5 +1,4 @@
 import inspect
-import sys
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any, Generic, TypeVarTuple
@@ -11,6 +10,7 @@ from pyvism.runtime.builtins import (
     StreamMap,
     Target,
     TargetKind,
+    stream_endpoints,
 )
 
 
@@ -214,16 +214,18 @@ class InstructionSet:
 
     @mnemonic
     @staticmethod
-    def flush(ms: VM.State) -> VM.State:
-        stdout = ms.streams.get(ms.stdout)
+    def flush(ms: VM.State, target: Target) -> VM.State:
+        stream = ms.streams.get((fd := target.address))
 
-        if stdout is None:
-            raise ValueError("stdout is uninitialized")
+        if stream is None:
+            raise ValueError(f"stream {stream!r} does not exist")
 
-        sys.stdout.write(stdout.getvalue())
-        sys.stdout.flush()
+        endpoint = stream_endpoints[fd]
 
-        ms.streams.reset_buffer(ms.stdout)
+        endpoint.write(stream.getvalue())
+        endpoint.flush()
+
+        ms.streams.reset_buffer(fd)
 
         return ms
 
@@ -235,7 +237,8 @@ class InstructionSet:
 
         if v is not None:
             ms = (
-                InstructionSet.write(ms.stdout, str(v)) >> InstructionSet.flush()
+                InstructionSet.write(ms.stdout, str(v))
+                >> InstructionSet.flush(Target(TargetKind.Stream, ms.stdout))
             ).run(ms)
 
         return ms
