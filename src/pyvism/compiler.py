@@ -4,7 +4,13 @@ from typing import Any, Callable, TextIO
 
 from result import Result, Ok, Err
 
-from pyvism.constants import MEMORY_MAX_ADDR, NULL, REGISTER_MAX_ADDR, get_name
+from pyvism.constants import (
+    MEMORY_MAX_ADDR,
+    NULL,
+    REGISTER_MAX_ADDR,
+    confusable_symbols,
+    get_name,
+)
 from pyvism.runtime.builtins import *
 from pyvism.runtime.errors import (
     Error,
@@ -196,6 +202,12 @@ class Compiler:
             self.__bytecode.extend(self.__operations)
             self.__operations.clear()
         else:
+            hint = (
+                f"did you mean `{confusable_symbols[char]}`?"
+                if char in confusable_symbols
+                else None
+            )
+
             self.errors.append(
                 VismSyntaxError(
                     f"unknown symbol {char!r}",
@@ -208,6 +220,7 @@ class Compiler:
                         "unknown symbol",
                     ),
                     [],
+                    hint,
                 )
             )
 
