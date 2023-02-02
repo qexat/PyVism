@@ -1,8 +1,10 @@
-from abc import ABC, abstractmethod
+from abc import ABC
+from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum, auto
 from io import StringIO
 from re import compile as re_compile
+import sys
 from typing import Any, TypeVar
 
 from pyvism.constants import NULL
@@ -24,6 +26,7 @@ __all__ = (
     "Mode",
     "NS_MODES",
     "STREAM_IDS",
+    "stream_endpoints",
     "BufferMap",
     "StreamMap",
     "ModeBufferMap",
@@ -135,15 +138,16 @@ NS_MODES = {
 
 STREAM_IDS = {"null": -1, "stdout": 0, "stderr": 1}
 
+stream_endpoints = defaultdict(
+    lambda: sys.stdout,
+    {
+        0: sys.stdout,
+        1: sys.stderr,
+    },
+)
+
 
 class BufferMap(dict[KT, StringIO], ABC):
-    @abstractmethod
-    def get(self, id: KT) -> StringIO | None:
-        """
-        Get the stream of key `id`.
-        """
-        pass
-
     def add(self, id: KT) -> KT:
         """
         Create a new StringIO stream and return the key ID.
@@ -178,11 +182,6 @@ class StreamMap(BufferMap[int]):
 
         return stream_map
 
-    def get(self, fd: int) -> StringIO | None:
-        if not (0 <= fd < len(self)):
-            return None
-        return self[fd]
-
     def add(self) -> int:
         fd = len(self)
         return super().add(fd)
@@ -197,11 +196,6 @@ class ModeBufferMap(BufferMap[Mode]):
             BufferMap[Mode].add(buffer_map, mode)
 
         return buffer_map
-
-    def get(self, mode: Mode):
-        if not mode in Mode:
-            return None
-        return self[mode]
 
 
 @dataclass
