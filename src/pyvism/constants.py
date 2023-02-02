@@ -4,6 +4,8 @@ __all__ = (
     "REGISTER_MAX_ADDR",
     "NULL",
     "REPL_PROMPT",
+    "get_name",
+    "confusable_symbols",
 )
 
 
@@ -19,3 +21,6 @@ REPL_PROMPT = "\x1b[1;37mVISM\x1b[22m ~> \x1b[0m"
 
 def get_name(t: type) -> str:
     return t.__name__
+
+
+confusable_symbols: dict[str, str] = {"*": "×"}
