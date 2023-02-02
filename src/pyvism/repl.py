@@ -69,6 +69,5 @@ def repl() -> int:
                                 print(f"\nDid you mean: '#{line}'?")
                 except Exception as e:
                     print(f"\x1b[31m{type(e).__name__}\x1b[39m: {e}")
-                    raise e
         except KeyboardInterrupt:
             return 0
