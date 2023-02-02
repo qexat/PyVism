@@ -10,6 +10,8 @@ You can find the specification of the language [here](https://github.com/qexat/v
 
 ## PyVism
 
+You need to follow these steps to make it working. It is recommended to use a [virtual environment](https://virtualenv.pypa.io/en/latest/).
+
 ```
 pip install -r requirements.txt
 pip install -e .
