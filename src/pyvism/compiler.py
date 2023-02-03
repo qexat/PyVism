@@ -12,6 +12,8 @@ from pyvism.constants import (
     get_name,
 )
 from pyvism.runtime.builtins import *
+from pyvism.runtime.builtins import instruction
+from pyvism.runtime.builtins import mnemonic
 from pyvism.runtime.errors import (
     Error,
     ErrorLine,
@@ -20,13 +22,7 @@ from pyvism.runtime.errors import (
     VismTypeError,
     VismValueError,
 )
-from pyvism.vm import (
-    InstructionSet,
-    instruction,
-    instruction_map,
-    mnemonic,
-    op_type_combinations,
-)
+from pyvism import instructions
 
 
 __all__ = ("Compiler",)
@@ -143,8 +139,8 @@ class Compiler:
     def operation_typecheck(
         self, mnemonic: mnemonic[*tuple[Any, ...]], targets_types: tuple[type, ...]
     ) -> Result[None, None]:
-        if mnemonic in op_type_combinations:
-            combinations = op_type_combinations[mnemonic]
+        if mnemonic in instructions.op_type_combinations:
+            combinations = instructions.op_type_combinations[mnemonic]
 
             if not targets_types in combinations:
                 return Err(None)
@@ -196,8 +192,8 @@ class Compiler:
         if char in target_kind_map:
             self.target_kind = target_kind_map[char]
             self.mode = Mode.Select
-        elif char in instruction_map:
-            self.buffer_operation(instruction_map[char])
+        elif char in instructions.char_map:
+            self.buffer_operation(instructions.char_map[char])
         elif char == "!":
             self.__bytecode.extend(self.__operations)
             self.__operations.clear()
@@ -372,10 +368,10 @@ class Compiler:
 
                 match self.target_kind:
                     case TargetKind.Memory | TargetKind.Register:
-                        self.__bytecode.append(InstructionSet.mov(target, value))
+                        self.__bytecode.append(instructions.mov(target, value))
                     case TargetKind.Stream:
                         self.__bytecode.append(
-                            InstructionSet.write(target.address, value)
+                            instructions.write(target.address, value)
                         )
             case _:
                 pass
