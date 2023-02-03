@@ -17,12 +17,13 @@ __all__ = (
     "ESCAPABLE_CHARS",
     "DISCARDED_CHARS",
     "MemoryValue",
+    "UnsetType",
     "TargetKind",
     "target_kind_map",
     "Target",
     "MacroKind",
     "macro_kind_map",
-    "AssignType",
+    "AssignKind",
     "assign_type_map",
     "Mode",
     "NS_MODES",
@@ -34,6 +35,8 @@ __all__ = (
     "TypeDef",
     "ConstTypeDef",
     "VarTypeDef",
+    "instruction",
+    "mnemonic",
 )
 
 
@@ -72,6 +75,9 @@ MemoryValue = (
     | dict[Any, Any]
     | None
 )
+
+
+UnsetType = type(None)
 
 
 class TargetKind(Enum):
@@ -113,14 +119,14 @@ macro_kind_map = {
 }
 
 
-class AssignType(Enum):
+class AssignKind(Enum):
     String = auto()
     Literal = auto()
 
 
 assign_type_map = {
-    "s": AssignType.String,
-    "l": AssignType.Literal,
+    "s": AssignKind.String,
+    "l": AssignKind.Literal,
 }
 
 
@@ -198,14 +204,6 @@ class ModeBufferMap(BufferMap[Mode]):
             BufferMap[Mode].add(buffer_map, mode)
 
         return buffer_map
-
-
-@dataclass
-class TypeDef_:
-    type: type[MemoryValue]
-    line: int = 1
-    spos: int = 0
-    epos: int = 0
 
 
 @dataclass

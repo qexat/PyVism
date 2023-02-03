@@ -1,4 +1,3 @@
-from ast import literal_eval
 from io import StringIO
 from typing import Any, Callable, TextIO
 
@@ -11,9 +10,29 @@ from pyvism.constants import (
     confusable_symbols,
     get_name,
 )
-from pyvism.runtime.builtins import *
-from pyvism.runtime.builtins import instruction
-from pyvism.runtime.builtins import mnemonic
+from pyvism.runtime.builtins import (
+    DEBUG_MODE_CHAR,
+    DISCARDED_CHARS,
+    ESCAPABLE_CHARS,
+    NS_MODES,
+    PRGM_MODE_CHAR,
+    STREAM_IDS,
+    AssignKind,
+    ConstTypeDef,
+    MacroKind,
+    Mode,
+    ModeBufferMap,
+    Target,
+    TargetKind,
+    TypeDef,
+    UnsetType,
+    VarTypeDef,
+    assign_type_map,
+    instruction,
+    macro_kind_map,
+    mnemonic,
+    target_kind_map,
+)
 from pyvism.runtime.errors import (
     Error,
     ErrorLine,
@@ -23,47 +42,14 @@ from pyvism.runtime.errors import (
     VismValueError,
 )
 from pyvism import instructions
+from pyvism.runtime.utils import (
+    evaluate,
+    is_known_stream,
+    is_valid_address,
+)
 
 
 __all__ = ("Compiler",)
-
-_UnsetType = type(None)
-
-
-def is_known_stream(fd: int) -> bool:
-    return fd in STREAM_IDS.values()
-
-
-def is_valid_address(s: str) -> bool:
-    return ADDRESS_REGEXP.fullmatch(s) is not None
-
-
-def is_valid_literal(s: str) -> bool:
-    try:
-        literal_eval(s)
-    except (ValueError, SyntaxError):
-        return False
-    else:
-        return True
-
-
-def escape_literal(literal: str) -> str:
-    escaped = literal
-    for key, value in ESCAPABLE_CHARS.items():
-        if key != value:
-            escaped = escaped.replace(value, f"\\{key}")
-    return escaped
-
-
-def evaluate(unparsed_value: str, assign_type: AssignType) -> Result[Any, None]:
-    match assign_type:
-        case AssignType.String:
-            return Ok(unparsed_value)
-        case AssignType.Literal:
-            esc_value = escape_literal(unparsed_value)
-            if not is_valid_literal(esc_value):
-                return Err(None)
-            return Ok(literal_eval(esc_value))
 
 
 class Compiler:
@@ -80,12 +66,12 @@ class Compiler:
         self.pos = 0
 
         self.memory_typedefs: list[TypeDef] = [
-            ConstTypeDef(_UnsetType)
+            ConstTypeDef(UnsetType)
         ] * MEMORY_MAX_ADDR
         self.registers: list[int] = list(range(REGISTER_MAX_ADDR))
 
         self.mode: Mode = Mode.Normal
-        self.assign_type: AssignType | None = None
+        self.assign_type: AssignKind | None = None
         # Default target is the null stream
         self.target_kind: TargetKind = TargetKind.Stream
         self.assign_addr: int = NULL
@@ -261,11 +247,11 @@ class Compiler:
             case TargetKind.Register:
                 return ConstTypeDef(int)
             case TargetKind.Stream:
-                return ConstTypeDef(_UnsetType)
+                return ConstTypeDef(UnsetType)
 
     def assign_typecheck(self, value: Any) -> Result[None, None]:
         target_typedef = self.get_target_typedef()
-        if (target_type := target_typedef.type) is _UnsetType:
+        if (target_type := target_typedef.type) is UnsetType:
             return Ok(None)
 
         infos = (
