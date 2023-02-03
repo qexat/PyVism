@@ -1,4 +1,4 @@
-<img src="./assets/logo/gradient.svg" width="100" height="100" alt="Vism logo" />
+<img src="./assets/logo/pyvism.svg" width="100" height="100" alt="Vism logo" />
 
 # Vism
 
