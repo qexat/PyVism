@@ -341,7 +341,7 @@ class Compiler:
                     case Err():
                         self.errors.append(
                             VismValueError(
-                                f"invalid literal '{value}'",
+                                f"invalid literal {str_value!r}",
                                 self.file.name,
                                 ErrorLine(
                                     self.line_number,
