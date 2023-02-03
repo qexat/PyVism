@@ -27,11 +27,8 @@ from pyvism.runtime.builtins import (
     TypeDef,
     UnsetType,
     VarTypeDef,
-    assign_type_map,
     instruction,
-    macro_kind_map,
     mnemonic,
-    target_kind_map,
 )
 from pyvism.runtime.errors import (
     Error,
@@ -120,7 +117,7 @@ class Compiler:
         return self.mode_request(DEBUG_MODE_CHAR)
 
     def get_targets_typedefs(self, targets: tuple[Target, ...]) -> tuple[TypeDef, ...]:
-        return tuple(self.memory_typedefs[target.address] for target in targets)
+        return tuple(self.memory_typedefs[target.id] for target in targets)
 
     def operation_typecheck(
         self, mnemonic: mnemonic[*tuple[Any, ...]], targets_types: tuple[type, ...]
@@ -175,8 +172,8 @@ class Compiler:
             self.__operations.append(mnemonic(*targets))
 
     def process_char(self, char: str) -> None:
-        if char in target_kind_map:
-            self.target_kind = target_kind_map[char]
+        if TargetKind.contains(char):
+            self.target_kind = TargetKind(char)
             self.mode = Mode.Select
         elif char in instructions.char_map:
             self.buffer_operation(instructions.char_map[char])
@@ -356,9 +353,7 @@ class Compiler:
                     case TargetKind.Memory | TargetKind.Register:
                         self.__bytecode.append(instructions.mov(target, value))
                     case TargetKind.Stream:
-                        self.__bytecode.append(
-                            instructions.write(target.address, value)
-                        )
+                        self.__bytecode.append(instructions.write(target.id, value))
             case _:
                 pass
 
@@ -409,7 +404,7 @@ class Compiler:
 
         self.mode = mode
         self.mode_spos = self.pos + 1
-        self.assign_type = assign_type_map.get(char, None)
+        self.assign_type = AssignKind(char) if AssignKind.contains(char) else None
 
     def run_macro(self) -> None:
         if self.is_eol():
@@ -426,16 +421,14 @@ class Compiler:
                     ),
                     [],
                     "try adding one of the following candidates:",
-                    [f"`{c}`" for c in macro_kind_map.keys()],
+                    [f"`{c}`" for c in MacroKind.values()],
                 )
             )
             return None
 
         char = self.cur_char
 
-        macro_kind = macro_kind_map.get(char, None)
-
-        if macro_kind is None:
+        if not MacroKind.contains(char):
             self.errors.append(
                 VismValueError(
                     f"macro '?{char}' does not exist",
@@ -449,12 +442,12 @@ class Compiler:
                     ),
                     [],
                     "Try one of the following candidates:",
-                    [*macro_kind_map.keys()],
+                    [f"`?{value}`" for value in MacroKind.values()],
                 )
             )
             return None
 
-        MacroMap[macro_kind](self)
+        MacroMap[MacroKind(char)](self)
 
     def is_discarded_char(self) -> bool:
         return self.mode is not Mode.Assign and self.cur_char in DISCARDED_CHARS

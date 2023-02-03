@@ -42,14 +42,14 @@ def _mov_register(ms: VMState, address: int, value: int) -> VMState:
 
 @mnemonic
 def mov(ms: VMState, target: Target, value: Any) -> VMState:
-    if target.address == NULL:
+    if target.id == NULL:
         raise RuntimeError("attempted to write to an invalid address")
 
     match target.kind:
         case TargetKind.Memory:
-            return _mov_memory(ms, target.address, value)
+            return _mov_memory(ms, target.id, value)
         case TargetKind.Register:
-            return _mov_register(ms, target.address, value)
+            return _mov_register(ms, target.id, value)
         case _:
             raise ValueError(f"{target}: bad instruction 'mov'")
 
@@ -64,7 +64,7 @@ def _add(l: Any, r: Any) -> Any:
 
 @mnemonic
 def add(ms: VMState, lsource: Target, rsource: Target) -> VMState:
-    laddr, raddr = lsource.address, rsource.address
+    laddr, raddr = lsource.id, rsource.id
     l, r = ms.memory[laddr], ms.memory[raddr]
 
     ms.memory[laddr] = _add(l, r)
@@ -83,7 +83,7 @@ def _sub(l: Any, r: Any) -> Any:
 
 @mnemonic
 def sub(ms: VMState, lsource: Target, rsource: Target) -> VMState:
-    laddr, raddr = lsource.address, rsource.address
+    laddr, raddr = lsource.id, rsource.id
     l, r = ms.memory[laddr], ms.memory[raddr]
 
     ms.memory[laddr] = _sub(l, r)
@@ -93,7 +93,7 @@ def sub(ms: VMState, lsource: Target, rsource: Target) -> VMState:
 
 @mnemonic
 def mul(ms: VMState, lsource: Target, rsource: Target) -> VMState:
-    laddr, raddr = lsource.address, rsource.address
+    laddr, raddr = lsource.id, rsource.id
     l, r = ms.memory[laddr], ms.memory[raddr]
 
     ms.memory[laddr] = l * r
@@ -103,7 +103,7 @@ def mul(ms: VMState, lsource: Target, rsource: Target) -> VMState:
 
 @mnemonic
 def intdiv(ms: VMState, lsource: Target, rsource: Target) -> VMState:
-    laddr, raddr = lsource.address, rsource.address
+    laddr, raddr = lsource.id, rsource.id
     l, r = ms.memory[laddr], ms.memory[raddr]
 
     ms.memory[laddr] = l // r
@@ -113,7 +113,7 @@ def intdiv(ms: VMState, lsource: Target, rsource: Target) -> VMState:
 
 @mnemonic
 def modulo(ms: VMState, lsource: Target, rsource: Target) -> VMState:
-    laddr, raddr = lsource.address, rsource.address
+    laddr, raddr = lsource.id, rsource.id
     l, r = ms.memory[laddr], ms.memory[raddr]
 
     ms.memory[laddr] = l % r
@@ -123,7 +123,7 @@ def modulo(ms: VMState, lsource: Target, rsource: Target) -> VMState:
 
 @mnemonic
 def divmod(ms: VMState, lsource: Target, rsource: Target) -> VMState:
-    laddr, raddr = lsource.address, rsource.address
+    laddr, raddr = lsource.id, rsource.id
     l, r = ms.memory[laddr], ms.memory[raddr]
 
     ms.memory[laddr], ms.memory[raddr] = _divmod(l, r)
@@ -145,7 +145,7 @@ def write(ms: VMState, fd: int, value: str) -> VMState:
 
 @mnemonic
 def flush(ms: VMState, target: Target) -> VMState:
-    stream = ms.streams.get((fd := target.address))
+    stream = ms.streams.get((fd := target.id))
 
     if stream is None:
         raise ValueError(f"stream {stream!r} does not exist")
@@ -162,7 +162,7 @@ def flush(ms: VMState, target: Target) -> VMState:
 
 @mnemonic
 def print(ms: VMState, source: Target) -> VMState:
-    addr = source.address
+    addr = source.id
     v = ms.memory[addr]
 
     if v is not None:

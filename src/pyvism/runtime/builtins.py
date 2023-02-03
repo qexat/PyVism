@@ -19,12 +19,9 @@ __all__ = (
     "MemoryValue",
     "UnsetType",
     "TargetKind",
-    "target_kind_map",
     "Target",
     "MacroKind",
-    "macro_kind_map",
     "AssignKind",
-    "assign_type_map",
     "Mode",
     "NS_MODES",
     "STREAM_IDS",
@@ -42,6 +39,17 @@ __all__ = (
 
 KT = TypeVar("KT")
 Ts = TypeVarTuple("Ts")
+
+
+class SupportsContains(Enum):
+    @classmethod
+    def values(cls):
+        for member in cls:
+            yield member.value
+
+    @classmethod
+    def contains(cls, value: Any) -> bool:
+        return value in {member.value for member in cls}
 
 
 ADDRESS_REGEXP = re_compile(r"[0-9A-F]+")
@@ -80,29 +88,22 @@ MemoryValue = (
 UnsetType = type(None)
 
 
-class TargetKind(Enum):
-    Memory = auto()
-    Register = auto()
-    Stream = auto()
-
-
-target_kind_map = {
-    "&": TargetKind.Memory,
-    "$": TargetKind.Register,
-    ":": TargetKind.Stream,
-}
+class TargetKind(SupportsContains):
+    Memory = "&"
+    Register = "$"
+    Stream = ":"
 
 
 @dataclass
 class Target:
     kind: TargetKind
-    address: int
+    id: int
 
     def __repr__(self):
-        return f"\x1b[37m{self.kind.name}\x1b[39m[\x1b[36m{self.address}\x1b[39m]"
+        return f"\x1b[37m{self.kind.name}\x1b[39m[\x1b[36m{self.id}\x1b[39m]"
 
     def clone(self) -> "Target":
-        return type(self)(self.kind, self.address)
+        return type(self)(self.kind, self.id)
 
     # Implementation detail
     @classmethod
@@ -110,37 +111,25 @@ class Target:
         return cls(TargetKind.Memory, NULL)
 
 
-class MacroKind(Enum):
-    Debug = auto()
+class MacroKind(SupportsContains):
+    Debug = "d"
 
 
-macro_kind_map = {
-    "d": MacroKind.Debug,
-}
-
-
-class AssignKind(Enum):
-    String = auto()
-    Literal = auto()
-
-
-assign_type_map = {
-    "s": AssignKind.String,
-    "l": AssignKind.Literal,
-}
+class AssignKind(SupportsContains):
+    String = "s"
+    Literal = "l"
 
 
 class Mode(Enum):
     Normal = auto()  # do stuff (operations, ...)
     Select = auto()  # select target of future assignment
     Assign = auto()  # write the value of the assignment
-    Macro = auto()  # ?<char> macro mode
 
 
 # Non-sugar modes (i.e. `^mode` syntax)
 NS_MODES = {
     "n": Mode.Normal,
-    **{atchar: Mode.Assign for atchar in assign_type_map.keys()},
+    **{atchar: Mode.Assign for atchar in AssignKind.values()},
 }
 
 
