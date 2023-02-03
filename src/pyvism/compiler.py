@@ -67,7 +67,7 @@ def evaluate(unparsed_value: str, assign_type: AssignType) -> Result[Any, None]:
             esc_value = escape_literal(unparsed_value)
             if not is_valid_literal(esc_value):
                 return Err(None)
-            return Ok(literal_eval(unparsed_value))
+            return Ok(literal_eval(esc_value))
 
 
 class Compiler:
