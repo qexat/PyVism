@@ -1,13 +1,14 @@
 from abc import ABC
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum, auto
+import inspect
 from io import StringIO
 from re import compile as re_compile
 import sys
-from typing import Any, TypeVar
+from typing import Any, Callable, Generic, TypeVar, TypeVarTuple
 
-from pyvism.constants import NULL
+from pyvism.constants import MEMORY_MAX_ADDR, NULL, REGISTER_MAX_ADDR
 
 __all__ = (
     "ADDRESS_REGEXP",
@@ -37,6 +38,7 @@ __all__ = (
 
 
 KT = TypeVar("KT")
+Ts = TypeVarTuple("Ts")
 
 
 ADDRESS_REGEXP = re_compile(r"[0-9A-F]+")
@@ -220,3 +222,56 @@ class VarTypeDef(TypeDef):
     line_number: int
     spos: int
     epos: int
+
+
+@dataclass
+class VMState:
+    memory: list[Any] = field(default_factory=lambda: [None] * MEMORY_MAX_ADDR)
+    typing: list[type[MemoryValue]] = field(
+        default_factory=lambda: [type(None)] * MEMORY_MAX_ADDR
+    )
+    registers: list[int] = field(default_factory=lambda: list(range(REGISTER_MAX_ADDR)))
+
+    streams: StreamMap = field(default_factory=StreamMap.new)
+    stdout: int = field(init=False)
+
+    def __post_init__(self) -> None:
+        self.stdout = STREAM_IDS["stdout"]
+
+
+@dataclass
+class instruction(Generic[*Ts]):
+    mnemonic: Callable[[VMState, *Ts], VMState]
+    operands: tuple[*Ts]
+
+    def run(self, ms: VMState) -> VMState:
+        return self.mnemonic(ms, *self.operands)
+
+    @staticmethod
+    def prettify(value: Any) -> str:
+        c = 6 if isinstance(value, (int, str)) else 7
+        return f" \x1b[3{c}m{value!r}\x1b[39m"
+
+    def __repr__(self) -> str:
+        mnemonic = f"\x1b[31m{self.mnemonic.__name__.lower()}\x1b[39m"
+
+        operands = [self.prettify(operand) for operand in self.operands]
+        # Using ", ".join(...) makes operands of type unknown??
+        operands_str = str.join(format(",", "^"), operands)
+
+        return f"{mnemonic:<12} {operands_str}"
+
+    def __rshift__(self, other: "instruction[*tuple[Any, ...]]") -> "instruction[*Ts]":
+        def _(ms: VMState, *operands: *Ts) -> VMState:
+            return other.mnemonic(self.mnemonic(ms, *operands), *other.operands)
+
+        return mnemonic(_)(*self.operands)
+
+
+class mnemonic(Generic[*Ts]):
+    def __init__(self, mnemonic_func: Callable[[VMState, *Ts], VMState]) -> None:
+        self.func = mnemonic_func
+        self.args = len(inspect.signature(mnemonic_func).parameters) - 1
+
+    def __call__(self, *operands: *Ts) -> instruction[*Ts]:
+        return instruction(self.func, operands)
