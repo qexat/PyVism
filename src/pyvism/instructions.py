@@ -3,7 +3,6 @@ from typing import Any
 
 from pyvism.constants import NULL
 from pyvism.runtime.builtins import (
-    MemoryValue,
     Target,
     TargetKind,
     VMState,
@@ -15,32 +14,17 @@ from pyvism.runtime.builtins import (
 # Use instruction.<something> to access an object
 
 
-def _mov_memory(ms: VMState, address: int, value: MemoryValue) -> VMState:
-    slot_type = ms.typing[address]
-    value_type = type(value)
-
-    if slot_type is not type(None) and not isinstance(value, slot_type):
-        raise TypeError(
-            f"address {address}: "
-            f"expected type {slot_type.__name__}, got {value_type.__name__}"
-        )
-
-    ms.memory[address] = value
-    ms.typing[address] = value_type
-
-    return ms
-
-
 @mnemonic
 def mov(ms: VMState, target: Target, value: Any) -> VMState:
     if target.id == NULL:
         raise RuntimeError("attempted to write to an invalid address")
 
-    match target.kind:
-        case TargetKind.Memory:
-            return _mov_memory(ms, target.id, value)
-        case _:
-            raise ValueError(f"{target}: bad instruction 'mov'")
+    if target.kind is not TargetKind.Memory:
+        raise ValueError(f"{target}: bad instruction 'mov'")
+
+    ms.memory[target.id] = value
+
+    return ms
 
 
 def _add(l: Any, r: Any) -> Any:
