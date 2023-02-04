@@ -8,7 +8,7 @@ from re import compile as re_compile
 import sys
 from typing import Any, Callable, Generic, TypeVar, TypeVarTuple
 
-from pyvism.constants import MEMORY_MAX_ADDR, NULL, REGISTER_MAX_ADDR
+from pyvism.constants import MEMORY_MAX_ADDR, NULL
 
 __all__ = (
     "ADDRESS_REGEXP",
@@ -217,7 +217,6 @@ class VMState:
     typing: list[type[MemoryValue]] = field(
         default_factory=lambda: [type(None)] * MEMORY_MAX_ADDR
     )
-    registers: list[int] = field(default_factory=lambda: list(range(REGISTER_MAX_ADDR)))
 
     streams: StreamMap = field(default_factory=StreamMap.new)
     stdout: int = field(init=False)
