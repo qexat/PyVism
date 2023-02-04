@@ -28,11 +28,10 @@ def mov(ms: VMState, target: Target, value: Any) -> VMState:
 
 
 def _add(l: Any, r: Any) -> Any:
-    supports_add = (int, float, bool, str, bytes, list, tuple)  # type: ignore
-    if isinstance(l, supports_add) and isinstance(r, supports_add):
-        return l + r  # type: ignore
-    elif isinstance(l, set) and isinstance(r, set):
+    if isinstance(l, set) and isinstance(r, set):
         return l | r  # type: ignore
+    else:
+        return l + r
 
 
 @mnemonic
@@ -40,18 +39,20 @@ def add(ms: VMState, lsource: Target, rsource: Target) -> VMState:
     laddr, raddr = lsource.id, rsource.id
     l, r = ms.memory[laddr], ms.memory[raddr]
 
+    stream_endpoints[0].write(f"{l=}, {r=}\n")
+
     ms.memory[laddr] = _add(l, r)
 
     return ms
 
 
 def _sub(l: Any, r: Any) -> Any:
-    if isinstance(l, (int, set)) and isinstance(r, (int, set)):
-        return l - r  # type: ignore
-    elif isinstance(l, str) and isinstance(r, str):
+    if isinstance(l, str) and isinstance(r, str):
         return l.replace(r, "")
     elif isinstance(l, (list, tuple)) and isinstance(r, (list, tuple)):
         return type(l)(v for v in l if v not in r)  # type: ignore
+    else:
+        return l - r
 
 
 @mnemonic
