@@ -1,7 +1,7 @@
 from builtins import divmod as _divmod
 from typing import Any
 
-from pyvism.constants import MEMORY_MAX_ADDR, NULL
+from pyvism.constants import NULL
 from pyvism.runtime.builtins import (
     MemoryValue,
     Target,
@@ -31,15 +31,6 @@ def _mov_memory(ms: VMState, address: int, value: MemoryValue) -> VMState:
     return ms
 
 
-def _mov_register(ms: VMState, address: int, value: int) -> VMState:
-    if not (0 <= value < MEMORY_MAX_ADDR):
-        raise ValueError(f"{hex(value)} is not a valid memory address")
-
-    ms.registers[address] = value
-
-    return ms
-
-
 @mnemonic
 def mov(ms: VMState, target: Target, value: Any) -> VMState:
     if target.id == NULL:
@@ -48,8 +39,6 @@ def mov(ms: VMState, target: Target, value: Any) -> VMState:
     match target.kind:
         case TargetKind.Memory:
             return _mov_memory(ms, target.id, value)
-        case TargetKind.Register:
-            return _mov_register(ms, target.id, value)
         case _:
             raise ValueError(f"{target}: bad instruction 'mov'")
 

@@ -51,6 +51,9 @@ __all__ = ("Compiler",)
 
 class Compiler:
     def __init__(self, file: TextIO, repl_mode: bool = False) -> None:
+        if MEMORY_MAX_ADDR < REGISTER_MAX_ADDR:
+            raise RuntimeError("illegal register max address")
+
         self.file: TextIO = file
 
         # StringIO is marked as having a `name` property
@@ -350,10 +353,12 @@ class Compiler:
                 target = Target(self.target_kind, self.assign_addr)
 
                 match self.target_kind:
-                    case TargetKind.Memory | TargetKind.Register:
+                    case TargetKind.Memory:
                         self.__bytecode.append(instructions.mov(target, value))
                     case TargetKind.Stream:
                         self.__bytecode.append(instructions.write(target.id, value))
+                    case TargetKind.Register:
+                        pass  # registers only exist at compile time
             case _:
                 pass
 
