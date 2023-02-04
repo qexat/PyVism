@@ -125,8 +125,8 @@ class Compiler:
     def operation_typecheck(
         self, mnemonic: mnemonic[*tuple[Any, ...]], targets_types: tuple[type, ...]
     ) -> Result[None, None]:
-        if mnemonic in instructions.op_type_combinations:
-            combinations = instructions.op_type_combinations[mnemonic]
+        if mnemonic in instructions.op_type_specialization:
+            combinations = instructions.op_type_specialization[mnemonic]
 
             if not targets_types in combinations:
                 return Err(None)
@@ -172,7 +172,15 @@ class Compiler:
             )
 
         if not self.errors:
-            self.__operations.append(mnemonic(*targets))
+            mnemonic_type_map = instructions.op_type_specialization.get(mnemonic, None)
+
+            final_mnemonic = (
+                mnemonic
+                if mnemonic_type_map is None
+                else mnemonic_type_map[targets_types] or mnemonic
+            )
+
+            self.__operations.append((final_mnemonic)(*targets))
 
     def process_char(self, char: str) -> None:
         if TargetKind.contains(char):
