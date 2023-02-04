@@ -58,8 +58,9 @@ def repl() -> int:
                     match compiler.compile():
                         case Ok(bytecode):
                             vm.run(bytecode)
+                            if bytecode:
+                                print()  # print newline
                         case Err(errors):
-
                             hidden_errors = len(errors[5:])
                             for error in errors[:5]:
                                 error.throw(verbose=False)
