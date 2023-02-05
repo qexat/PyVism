@@ -235,11 +235,10 @@ class Compiler:
 	def buffer_char(self, char: str) -> None:
 		if self.char_escaping:
 			self.escape_char(char)
+		elif char == "\\" and self.mode is Mode.Assign:
+			self.char_escaping = True
 		else:
-			if char == "\\" and self.mode is Mode.Assign:
-				self.char_escaping = True
-			else:
-				self.mode_buffers[self.mode].write(char)
+			self.mode_buffers[self.mode].write(char)
 
 	def get_target_name(self) -> str:
 		if self.target_kind is TargetKind.Stream and is_known_stream(self.assign_addr):
