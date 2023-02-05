@@ -6,7 +6,7 @@ import inspect
 from io import StringIO
 from re import compile as re_compile
 import sys
-from typing import Any, Callable, Generic, TypeVar, TypeVarTuple
+from typing import Any, Callable, Generic, TypeVar, TypeVarTuple, Self
 
 from pyvism.constants import MEMORY_MAX_ADDR, NULL
 
@@ -102,7 +102,7 @@ class Target:
 	def __repr__(self):
 		return f"\x1b[37m{self.kind.name}\x1b[39m[\x1b[36m{self.id}\x1b[39m]"
 
-	def clone(self) -> "Target":
+	def clone(self) -> Self:
 		return type(self)(self.kind, self.id)
 
 	# Implementation detail
@@ -171,7 +171,7 @@ class BufferMap(dict[KT, StringIO], ABC):
 
 class StreamMap(BufferMap[int]):
 	@classmethod
-	def new(cls) -> "StreamMap":
+	def new(cls) -> Self:
 		stream_map = cls()
 
 		for name in STREAM_IDS.values():
@@ -186,7 +186,7 @@ class StreamMap(BufferMap[int]):
 
 class ModeBufferMap(BufferMap[Mode]):
 	@classmethod
-	def new(cls) -> "ModeBufferMap":
+	def new(cls) -> Self:
 		buffer_map = cls()
 
 		for mode in Mode:
