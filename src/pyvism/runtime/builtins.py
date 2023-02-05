@@ -6,6 +6,7 @@ import inspect
 from io import StringIO
 from re import compile as re_compile
 import sys
+from types import NoneType as UnsetType
 from typing import Any, Callable, Generic, TypeVar, TypeVarTuple, Self
 
 from pyvism.constants import MEMORY_MAX_ADDR, NULL
@@ -83,9 +84,6 @@ MemoryValue = (
 	| dict[Any, Any]
 	| None
 )
-
-
-UnsetType = type(None)
 
 
 class TargetKind(SupportsContains):
@@ -215,7 +213,7 @@ class VarTypeDef(TypeDef):
 class VMState:
 	memory: list[Any] = field(default_factory=lambda: [None] * MEMORY_MAX_ADDR)
 	typing: list[type[MemoryValue]] = field(
-		default_factory=lambda: [type(None)] * MEMORY_MAX_ADDR
+		default_factory=lambda: [UnsetType] * MEMORY_MAX_ADDR
 	)
 
 	streams: StreamMap = field(default_factory=StreamMap.new)
