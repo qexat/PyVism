@@ -137,7 +137,7 @@ class Compiler:
 		)
 
 		targets_typedefs = self.get_targets_typedefs(targets)
-		targets_types = tuple(map(lambda td: td.type, targets_typedefs))
+		targets_types = tuple(td.type for td in targets_typedefs)
 		targets_types_names = tuple(map(get_name, targets_types))
 
 		if self.operation_typecheck(mnemonic, targets_types).is_err():
