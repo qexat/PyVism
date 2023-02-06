@@ -22,4 +22,4 @@ class VM:
 					file=sys.stderr,
 				)
 				if self.strict_mode:
-					return
+					return None
