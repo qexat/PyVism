@@ -6,7 +6,6 @@ import inspect
 from io import StringIO
 from re import compile as re_compile
 import sys
-from types import NoneType as UnsetType
 from typing import Any, Callable, Generic, TypeVar, TypeVarTuple, Self
 
 from pyvism.constants import MEMORY_MAX_ADDR, NULL
@@ -84,6 +83,9 @@ MemoryValue = (
 	| dict[Any, Any]
 	| None
 )
+
+
+UnsetType = type(None)
 
 
 class TargetKind(SupportsContains):
