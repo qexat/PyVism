@@ -137,7 +137,7 @@ class Compiler:
 		)
 
 		targets_typedefs = self.get_targets_typedefs(targets)
-		targets_types = tuple(map(lambda td: td.type, targets_typedefs))
+		targets_types = tuple(td.type for td in targets_typedefs)
 		targets_types_names = tuple(map(get_name, targets_types))
 
 		if self.operation_typecheck(mnemonic, targets_types).is_err():
@@ -235,11 +235,10 @@ class Compiler:
 	def buffer_char(self, char: str) -> None:
 		if self.char_escaping:
 			self.escape_char(char)
+		elif char == "\\" and self.mode is Mode.Assign:
+			self.char_escaping = True
 		else:
-			if char == "\\" and self.mode is Mode.Assign:
-				self.char_escaping = True
-			else:
-				self.mode_buffers[self.mode].write(char)
+			self.mode_buffers[self.mode].write(char)
 
 	def get_target_name(self) -> str:
 		if self.target_kind is TargetKind.Stream and is_known_stream(self.assign_addr):

@@ -131,7 +131,7 @@ def write(ms: VMState, fd: int, value: str) -> VMState:
 
 @mnemonic
 def flush(ms: VMState, target: Target) -> VMState:
-	stream = ms.streams.get((fd := target.id))
+	stream = ms.streams.get(fd := target.id)
 
 	if stream is None:
 		raise ValueError(f"stream {stream!r} does not exist")

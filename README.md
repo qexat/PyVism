@@ -18,7 +18,7 @@ If no issue matches your PR, make sure to open one beforehand.
 
 ## PyVism
 
-You need to follow these steps to make it working. It is recommended to use a [virtual environment](https://virtualenv.pypa.io/en/latest/).
+You need to follow these steps to make it work. It is recommended to use a [virtual environment](https://virtualenv.pypa.io/en/latest/).
 
 ```
 pip install -r requirements.txt
