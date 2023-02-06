@@ -116,7 +116,7 @@ class Error:
 	def candidates(self) -> list[str]:
 		return [self._help_line(msg) for msg in self.candidate_messages]
 
-	def throw(self, verbose: bool = True) -> None:
+	def throw(self, *, verbose: bool = True) -> None:
 		err_write(self.synopsis)
 
 		if verbose:
