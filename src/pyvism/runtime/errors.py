@@ -77,7 +77,7 @@ class Error:
 	def _get_ruler_size(self) -> int:
 		return len(str(max(line.number for line in self.info_lines + [self.error_line]))) + 1
 
-	def _get_ruler_space(self, minus_one: bool = False) -> str:
+	def _get_ruler_space(self, *, minus_one: bool = False) -> str:
 		return " " * (self._get_ruler_size() - minus_one)
 
 	def _padding_line(self) -> str:
@@ -93,7 +93,7 @@ class Error:
 
 	@property
 	def source(self) -> str:
-		arrow = color(self._get_ruler_space(True) + "-->", 4)
+		arrow = color(self._get_ruler_space(minus_one=True) + "-->", 4)
 		path = f"{self.source_path}:{self.error_line.number}:{self.error_line.spos+1}"
 		return f"{arrow} {path}"
 
@@ -101,7 +101,7 @@ class Error:
 	def lines(self) -> list[MessageLine]:
 		return sorted([*self.info_lines, self.error_line], key=lambda line: line.number)
 
-	def _help_line(self, message: str, indent: bool = False) -> str:
+	def _help_line(self, message: str, *, indent: bool = False) -> str:
 		bullet = color(self._get_ruler_space() + "=", 4)
 		base = f"{bullet} {bold('help:')} "
 		return f"{base}{'  ' * indent}{message}"
