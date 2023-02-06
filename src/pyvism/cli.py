@@ -15,7 +15,7 @@ def get_args(argv: list[str] | None = None) -> Namespace:
 	parser_run = subparsers.add_parser("run", description="Run a Vism file.")
 	parser_run.add_argument("file", type=FileType("r+"))
 
-	return parser.parse_args()
+	return parser.parse_args(argv)
 
 
 def main_debug(argv: list[str] | None = None) -> int:
