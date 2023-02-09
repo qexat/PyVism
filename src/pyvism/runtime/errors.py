@@ -75,7 +75,7 @@ class Error:
 	candidate_messages: list[str] = field(default_factory=list)
 
 	def _get_ruler_size(self) -> int:
-		return len(str(max(line.number for line in [*self.info_lines, self.error_line]))) + 1
+		return len(str(max(line.number for line in [*self.info_lines, self.error_line]))) + 1  # type: ignore
 
 	def _get_ruler_space(self, *, minus_one: bool = False) -> str:
 		return " " * (self._get_ruler_size() - minus_one)
