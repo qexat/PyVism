@@ -1,6 +1,7 @@
 import sys
 
-from pyvism.frontend.vmbc.tools import AnyInstruction, VMState
+from pyvism.frontend.vmbc.tools import AnyInstruction
+from pyvism.frontend.vmbc.tools import VMState
 
 
 class VM:

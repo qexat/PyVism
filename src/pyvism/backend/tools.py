@@ -1,8 +1,15 @@
 from collections.abc import Callable
 from types import UnionType
-from typing import Any, Generic, Literal, LiteralString, TypeVar, TypeVarTuple, overload
+from typing import Any
+from typing import Generic
+from typing import Literal
+from typing import LiteralString
+from typing import overload
+from typing import TypeVar
+from typing import TypeVarTuple
 
-from pyvism.compiler.types import MemoryValue, UnsetType
+from pyvism.compiler.types import MemoryValue
+from pyvism.compiler.types import UnsetType
 
 OP_SYMBOL = TypeVar("OP_SYMBOL", bound=LiteralString)
 OP_NAME = TypeVar("OP_NAME", bound=LiteralString)

@@ -1,5 +1,7 @@
 from typing import Any
-from pyvism.compiler.types import MemoryValue, UnsetType
+
+from pyvism.compiler.types import MemoryValue
+from pyvism.compiler.types import UnsetType
 
 
 def static_type_check(target_type: type[MemoryValue], value: Any) -> bool:

@@ -1,7 +1,11 @@
-from typing import Any, LiteralString
+from typing import Any
+from typing import LiteralString
+
+from pyvism.backend.interface import symbol_table
+from pyvism.backend.tools import IdentifierLike
+from pyvism.backend.tools import PseudoMnemonic
+from pyvism.backend.tools import StreamIDLike
 from pyvism.compiler.tools import ParsingState
-from pyvism.ir.interface import symbol_table
-from pyvism.ir.tools import IdentifierLike, PseudoMnemonic, StreamIDLike
 
 
 def get_buffer_eval_no_E002(state: ParsingState) -> Any:

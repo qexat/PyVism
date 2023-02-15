@@ -1,21 +1,19 @@
-from pyvism.compiler.tools import (
-	FileHandler,
-	ParsingState,
-	PosTypeDef,
-	TypeDef,
-	macro_mode_request,
-	program_mode_request,
-	CARET_MODES,
-	MacroKind,
-	Mode,
-)
+from pyvism.compiler.tools import CARET_MODES
+from pyvism.compiler.tools import FileHandler
+from pyvism.compiler.tools import macro_mode_request
+from pyvism.compiler.tools import MacroKind
+from pyvism.compiler.tools import Mode
+from pyvism.compiler.tools import ParsingState
+from pyvism.compiler.tools import PosTypeDef
+from pyvism.compiler.tools import program_mode_request
+from pyvism.compiler.tools import TypeDef
 from pyvism.constants import confusable_symbols
-from pyvism.errsys.tools import Error, ErrorLine, InfoLine
-from pyvism.errsys.tricks import (
-	get_args_types_no_E009,
-	get_buffer_eval_no_E002,
-	get_pseudo_mnemonic_no_E008,
-)
+from pyvism.errsys.tools import Error
+from pyvism.errsys.tools import ErrorLine
+from pyvism.errsys.tools import InfoLine
+from pyvism.errsys.tricks import get_args_types_no_E009
+from pyvism.errsys.tricks import get_buffer_eval_no_E002
+from pyvism.errsys.tricks import get_pseudo_mnemonic_no_E008
 
 
 # E001: invalid selector type
@@ -215,7 +213,7 @@ def _E006_get_candidates() -> list[str]:
 
 
 # E007: invalid escape sequence
-def E007(file: FileHandler, state: ParsingState) -> Error:
+def E007(file: FileHandler, _: ParsingState) -> Error:
 	"""
 	# E007: invalid escape sequence
 
@@ -235,7 +233,7 @@ def E007(file: FileHandler, state: ParsingState) -> Error:
 
 
 # E008: unknown symbol
-def E008(file: FileHandler, state: ParsingState) -> Error:
+def E008(file: FileHandler, _: ParsingState) -> Error:
 	"""
 	# E008: unknown symbol
 

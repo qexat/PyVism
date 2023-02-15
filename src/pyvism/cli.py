@@ -1,4 +1,6 @@
-from argparse import ArgumentParser, FileType, Namespace
+from argparse import ArgumentParser
+from argparse import FileType
+from argparse import Namespace
 
 from pyvism.vm.runner import run
 

@@ -1,41 +1,41 @@
 from collections.abc import Callable
-from typing import Any, TextIO, TypeVar
+from typing import Any
+from typing import TextIO
+from typing import TypeVar
 
-from result import Ok, Err, Result
-
+from pyvism.backend.instructions import MEMCH
+from pyvism.backend.instructions import SWRITE
+from pyvism.backend.interface import get_pseudo_mnemonic
 from pyvism.compiler.macros import macro_map
-from pyvism.compiler.tools import (
-	FileHandler,
-	ParsingState,
-	discarded_char,
-	is_matching_number_of_operands,
-	macro_mode_request,
-	program_mode_request,
-	CARET_MODES,
-	OPERATION_MODES,
-	DataStorageKind,
-	MacroKind,
-	Mode,
-)
+from pyvism.compiler.tools import CARET_MODES
+from pyvism.compiler.tools import DataStorageKind
+from pyvism.compiler.tools import discarded_char
+from pyvism.compiler.tools import FileHandler
+from pyvism.compiler.tools import is_matching_number_of_operands
+from pyvism.compiler.tools import macro_mode_request
+from pyvism.compiler.tools import MacroKind
+from pyvism.compiler.tools import Mode
+from pyvism.compiler.tools import OPERATION_MODES
+from pyvism.compiler.tools import ParsingState
+from pyvism.compiler.tools import program_mode_request
 from pyvism.compiler.typechecking import static_type_check
 from pyvism.constants import ESCAPABLE_CHARS
-from pyvism.errsys.errors import (
-	E001,
-	E002,
-	E003,
-	E004,
-	E005,
-	E006,
-	E007,
-	E008,
-	E009,
-	E010,
-)
+from pyvism.errsys.errors import E001
+from pyvism.errsys.errors import E002
+from pyvism.errsys.errors import E003
+from pyvism.errsys.errors import E004
+from pyvism.errsys.errors import E005
+from pyvism.errsys.errors import E006
+from pyvism.errsys.errors import E007
+from pyvism.errsys.errors import E008
+from pyvism.errsys.errors import E009
+from pyvism.errsys.errors import E010
 from pyvism.errsys.tools import Error
 from pyvism.frontend.map import CompilationTarget
 from pyvism.frontend.tools import TargetFrontEnd
-from pyvism.ir.instructions import MEMCH, SWRITE
-from pyvism.ir.interface import get_pseudo_mnemonic
+from result import Err
+from result import Ok
+from result import Result
 
 
 T = TypeVar("T")

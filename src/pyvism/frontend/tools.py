@@ -1,7 +1,9 @@
 from collections.abc import Callable
-from typing import Generic, LiteralString, TypeVar
+from typing import Generic
+from typing import LiteralString
+from typing import TypeVar
 
-from pyvism.ir.tools import IRI
+from pyvism.backend.tools import IRI
 
 T = TypeVar("T")
 

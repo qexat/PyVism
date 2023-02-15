@@ -1,8 +1,11 @@
 from collections.abc import Callable
 from re import compile as compile_regex
-from typing import Generic, TypeVar
+from typing import Generic
+from typing import TypeVar
 
-from result import Result, Ok, Err
+from result import Err
+from result import Ok
+from result import Result
 
 T = TypeVar("T")
 

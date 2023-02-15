@@ -1,7 +1,8 @@
-from dataclasses import dataclass, field
-from os import linesep
 import os
 import sys
+from dataclasses import dataclass
+from dataclasses import field
+from os import linesep
 from typing import ClassVar
 
 

@@ -1,40 +1,37 @@
 from typing import LiteralString
 
+from pyvism.backend.instructions import ADD
+from pyvism.backend.instructions import DIFF
+from pyvism.backend.instructions import DIVMOD
+from pyvism.backend.instructions import INTDIV
+from pyvism.backend.instructions import MEMCH
+from pyvism.backend.instructions import MODULO
+from pyvism.backend.instructions import MUL
+from pyvism.backend.instructions import PATHJOIN
+from pyvism.backend.instructions import PRINTV
+from pyvism.backend.instructions import REPLIC
+from pyvism.backend.instructions import SFLUSH
+from pyvism.backend.instructions import SUB
+from pyvism.backend.instructions import SWRITE
+from pyvism.backend.instructions import UNION
+from pyvism.backend.tools import IRI
 from pyvism.frontend.tools import TargetFrontEnd
-from pyvism.frontend.vmbc.instructions import (
-	add,
-	divmod,
-	flush,
-	intdiv,
-	modulo,
-	mov,
-	mul,
-	pathjoin,
-	print,
-	seqdiff,
-	strdiff,
-	sub,
-	union,
-	write,
-)
-from pyvism.frontend.vmbc.tools import AnyInstruction, mnemonic
-from pyvism.ir.instructions import (
-	ADD,
-	DIFF,
-	DIVMOD,
-	INTDIV,
-	MEMCH,
-	MODULO,
-	MUL,
-	PATHJOIN,
-	PRINTV,
-	REPLIC,
-	SFLUSH,
-	SUB,
-	SWRITE,
-	UNION,
-)
-from pyvism.ir.tools import IRI
+from pyvism.frontend.vmbc.instructions import add
+from pyvism.frontend.vmbc.instructions import divmod
+from pyvism.frontend.vmbc.instructions import flush
+from pyvism.frontend.vmbc.instructions import intdiv
+from pyvism.frontend.vmbc.instructions import modulo
+from pyvism.frontend.vmbc.instructions import mov
+from pyvism.frontend.vmbc.instructions import mul
+from pyvism.frontend.vmbc.instructions import pathjoin
+from pyvism.frontend.vmbc.instructions import print
+from pyvism.frontend.vmbc.instructions import seqdiff
+from pyvism.frontend.vmbc.instructions import strdiff
+from pyvism.frontend.vmbc.instructions import sub
+from pyvism.frontend.vmbc.instructions import union
+from pyvism.frontend.vmbc.instructions import write
+from pyvism.frontend.vmbc.tools import AnyInstruction
+from pyvism.frontend.vmbc.tools import mnemonic
 
 
 # PascalCase because FrontEnd is secretly a class

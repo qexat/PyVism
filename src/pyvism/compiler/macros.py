@@ -1,4 +1,6 @@
-from pyvism.compiler.tools import FileHandler, ParsingState, MacroKind
+from pyvism.compiler.tools import FileHandler
+from pyvism.compiler.tools import MacroKind
+from pyvism.compiler.tools import ParsingState
 
 
 def debug(_: FileHandler, state: ParsingState) -> None:

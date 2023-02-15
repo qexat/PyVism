@@ -3,7 +3,8 @@ from io import StringIO
 from typing import Any
 
 from pyvism.compiler.tools import stream_endpoints
-from pyvism.frontend.vmbc.tools import VMState, mnemonic
+from pyvism.frontend.vmbc.tools import mnemonic
+from pyvism.frontend.vmbc.tools import VMState
 
 
 def _get_stream(ms: VMState, fd: int) -> StringIO:

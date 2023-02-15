@@ -1,14 +1,8 @@
 """
 Some utils to extend Python.
 """
-
 from enum import Enum
-from typing import Any, TypeVar
-
-
-T1 = TypeVar("T1")
-T2 = TypeVar("T2")
-T3 = TypeVar("T3")
+from typing import Any
 
 
 class SupportsContains(Enum):

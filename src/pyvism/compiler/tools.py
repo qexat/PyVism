@@ -1,38 +1,43 @@
-from abc import ABC, abstractmethod
+import sys
+from abc import ABC
+from abc import abstractmethod
 from ast import literal_eval
 from collections import defaultdict
+from collections.abc import Generator
 from dataclasses import dataclass
-from enum import Enum, auto
+from enum import auto
+from enum import Enum
 from functools import cached_property
 from io import StringIO
-import sys
-from typing import (
-	Any,
-	Generator,
-	Generic,
-	LiteralString,
-	Self,
-	TextIO,
-	TypeGuard,
-	TypeVar,
-)
+from typing import Any
+from typing import Generic
+from typing import LiteralString
+from typing import Self
+from typing import TextIO
+from typing import TypeGuard
+from typing import TypeVar
 
-from result import Err, Ok, Result
-
-from pyvism.compiler.internal import Address, Identifier, Integer, InternalType
-from pyvism.compiler.types import MemoryValue, UnsetType
-from pyvism.constants import (
-	DISCARDED_CHARS,
-	ESCAPABLE_CHARS,
-	MACRO_MODE_CHAR,
-	NULL,
-	PRGM_MODE_CHAR,
-	REGISTER_MAX_ADDR,
-	STREAM_IDS,
-)
+from pyvism.backend.tools import IdentifierLike
+from pyvism.backend.tools import IRI
+from pyvism.backend.tools import StreamIDLike
+from pyvism.compiler.internal import Address
+from pyvism.compiler.internal import Identifier
+from pyvism.compiler.internal import Integer
+from pyvism.compiler.internal import InternalType
+from pyvism.compiler.types import MemoryValue
+from pyvism.compiler.types import UnsetType
+from pyvism.constants import DISCARDED_CHARS
+from pyvism.constants import ESCAPABLE_CHARS
+from pyvism.constants import MACRO_MODE_CHAR
+from pyvism.constants import NULL
+from pyvism.constants import PRGM_MODE_CHAR
+from pyvism.constants import REGISTER_MAX_ADDR
+from pyvism.constants import STREAM_IDS
 from pyvism.errsys.tools import Error
-from pyvism.ir.tools import IRI, IdentifierLike, StreamIDLike
 from pyvism.py_utils import SupportsContains
+from result import Err
+from result import Ok
+from result import Result
 
 
 T = TypeVar("T")
@@ -257,10 +262,6 @@ class TypeDef(ABC):
 
 	type: type[MemoryValue]
 
-	@property
-	def type_name(self) -> str:
-		return self.type.__name__
-
 
 class FreeTypeDef(TypeDef):
 	"""
@@ -317,13 +318,6 @@ class TypeDefTracker(dict[str, TypeDef]):
 				return FreeTypeDef(str)
 			case DataStorageKind.Stream:
 				return FreeTypeDef(UnsetType)
-
-	def get_from_targets(self, *targets: DataStorage[Any]) -> tuple[TypeDef]:
-		"""
-		Return the type definition of a batch of targets (in order).
-		"""
-
-		return tuple(self.get_from_target(target) for target in targets)
 
 	def set(
 		self,

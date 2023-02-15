@@ -1,10 +1,13 @@
 import inspect
 from collections.abc import Callable
-from dataclasses import dataclass, field
-from typing import Any, Generic, TypeVarTuple
+from dataclasses import dataclass
+from dataclasses import field
+from typing import Any
+from typing import Generic
+from typing import TypeVarTuple
 
-from pyvism.constants import STREAM_IDS
 from pyvism.compiler.tools import BufferMap
+from pyvism.constants import STREAM_IDS
 
 Ts = TypeVarTuple("Ts")
 

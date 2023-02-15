@@ -1,6 +1,8 @@
 from typing import Any
 
-from pyvism.ir.tools import IdentifierLike, StreamIDLike, mnemonic
+from pyvism.backend.tools import IdentifierLike
+from pyvism.backend.tools import mnemonic
+from pyvism.backend.tools import StreamIDLike
 
 
 @mnemonic("_UNARY_WT_MNEMONIC")

@@ -1,22 +1,23 @@
-from typing import Any, LiteralString
+from typing import Any
+from typing import LiteralString
 
-from pyvism.compiler.types import MemoryValue, UnsetType
-from pyvism.ir.instructions import (
-	ADD,
-	DIFF,
-	DIVMOD,
-	INTDIV,
-	MODULO,
-	MUL,
-	PATHJOIN,
-	PRINTV,
-	REPLIC,
-	SFLUSH,
-	SUB,
-	SWRITE,
-	UNION,
-)
-from pyvism.ir.tools import AnyIRMnemonic, PseudoMnemonic
+from pyvism.backend.instructions import ADD
+from pyvism.backend.instructions import DIFF
+from pyvism.backend.instructions import DIVMOD
+from pyvism.backend.instructions import INTDIV
+from pyvism.backend.instructions import MODULO
+from pyvism.backend.instructions import MUL
+from pyvism.backend.instructions import PATHJOIN
+from pyvism.backend.instructions import PRINTV
+from pyvism.backend.instructions import REPLIC
+from pyvism.backend.instructions import SFLUSH
+from pyvism.backend.instructions import SUB
+from pyvism.backend.instructions import SWRITE
+from pyvism.backend.instructions import UNION
+from pyvism.backend.tools import AnyIRMnemonic
+from pyvism.backend.tools import PseudoMnemonic
+from pyvism.compiler.types import MemoryValue
+from pyvism.compiler.types import UnsetType
 
 
 pseudo_mnemonics: list[PseudoMnemonic[LiteralString, Any, *tuple[Any, ...]]] = [

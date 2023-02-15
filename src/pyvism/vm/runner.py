@@ -1,11 +1,11 @@
 from typing import TextIO
 
-from result import Err, Ok
-
 from pyvism.compiler.compiler import compile
 from pyvism.errsys.tools import report_abortion
 from pyvism.frontend.map import CompilationTarget
 from pyvism.vm.vm import VM
+from result import Err
+from result import Ok
 
 
 def run(file: TextIO) -> int:
