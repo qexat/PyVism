@@ -4,6 +4,9 @@ from dataclasses import dataclass
 from dataclasses import field
 from typing import ClassVar
 
+from pyvism.py_utils import bold
+from pyvism.py_utils import color
+
 
 stderr = sys.__stderr__
 
@@ -145,12 +148,3 @@ def err_write(s: str = "") -> None:
 
 def report_abortion() -> None:
 	err_write(bold(color("error", 1) + ": aborting due to previous error"))
-
-
-# -- We don't need a dependency -- #
-def bold(s: str) -> str:
-	return f"\x1b[1m{s}\x1b[22m"
-
-
-def color(s: str, c: int) -> str:
-	return f"\x1b[3{c}m{s}\x1b[39m"

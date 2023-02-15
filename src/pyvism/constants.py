@@ -13,6 +13,10 @@ __all__ = (
 
 __version__ = "2.0.0"
 
+from pyvism.py_utils import bold
+from pyvism.py_utils import color
+
+
 REGISTER_MAX_ADDR = 0x10
 
 PRGM_MODE_CHAR = "^"
@@ -35,7 +39,7 @@ NULL = -1
 
 STREAM_IDS = {"null": NULL, "stdout": 0, "stderr": 1}
 
-REPL_PROMPT = "\x1b[1;37mVISM\x1b[22m ~> \x1b[0m"
+REPL_PROMPT = color(bold("VISM") + " ~> ", 7)
 
 
 confusable_symbols: dict[str, str] = {"*": "×"}
