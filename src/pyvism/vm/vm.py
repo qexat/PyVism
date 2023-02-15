@@ -1,7 +1,6 @@
 import sys
-from typing import Any
 
-from pyvism.runtime.builtins import VMState, instruction
+from pyvism.frontend.vmbc.tools import AnyInstruction, VMState
 
 
 class VM:
@@ -9,7 +8,7 @@ class VM:
 		self.state = VMState()
 		self.strict_mode = strict_mode
 
-	def run(self, bytecode: list[instruction[*tuple[Any, ...]]]) -> None:
+	def run(self, bytecode: list[AnyInstruction]) -> None:
 		for instr in bytecode:
 			try:
 				self.state = instr.run(self.state)

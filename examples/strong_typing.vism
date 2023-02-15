@@ -1,2 +1,4 @@
-&0^sHello World!\n^np!
-&0^l64^np!
+&x ^sHello World!\n^n
+$0 ^l "x" ^n
+p
+&x ^l64^n p!

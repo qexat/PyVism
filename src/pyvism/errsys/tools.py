@@ -1,10 +1,8 @@
 from dataclasses import dataclass, field
 from os import linesep
+import os
 import sys
 from typing import ClassVar
-
-
-__all__ = ("Error",)
 
 
 stderr = sys.__stderr__
@@ -12,8 +10,8 @@ stderr = sys.__stderr__
 
 @dataclass
 class MessageLine:
-	number: int
 	content: str
+	number: int
 
 	spos: int
 	epos: int
@@ -65,14 +63,20 @@ class ErrorLine(MessageLine):
 
 @dataclass
 class Error:
+	id: str
+
 	summary: str
-	source_path: str
+	source_file: str
 
 	error_line: ErrorLine
-	info_lines: list[InfoLine]
+	info_lines: list[InfoLine] = field(default_factory=list)
 
 	hint_message: str | None = None
 	candidate_messages: list[str] = field(default_factory=list)
+
+	def __post_init__(self) -> None:
+		os.path.abspath
+		self.source_file = os.path.abspath(os.path.join(os.getcwd(), self.source_file))
 
 	def _get_ruler_size(self) -> int:
 		return len(str(max(line.number for line in [*self.info_lines, self.error_line]))) + 1  # type: ignore
@@ -85,16 +89,16 @@ class Error:
 
 	@property
 	def name(self) -> str:
-		return color(type(self).__name__, 1)
+		return color(self.id, 1)
 
 	@property
 	def synopsis(self) -> str:
-		return bold(f"{self.name}: {self.summary}")
+		return bold(f"[{self.name}]: {self.summary}")
 
 	@property
 	def source(self) -> str:
 		arrow = color(self._get_ruler_space(minus_one=True) + "-->", 4)
-		path = f"{self.source_path}:{self.error_line.number}:{self.error_line.spos+1}"
+		path = f"{self.source_file}:{self.error_line.number}:{self.error_line.spos+1}"
 		return f"{arrow} {path}"
 
 	@property
@@ -135,18 +139,6 @@ class Error:
 			err_write()
 
 
-class VismSyntaxError(Error):
-	pass
-
-
-class VismTypeError(Error):
-	pass
-
-
-class VismValueError(Error):
-	pass
-
-
 def err_write(s: str = "") -> None:
 	print(s, file=stderr)
 
@@ -155,7 +147,7 @@ def report_abortion() -> None:
 	err_write(bold(color("error", 1) + ": aborting due to previous error"))
 
 
-# -- We only use these there, we don't need a dependancy --
+# -- We don't need a dependency -- #
 def bold(s: str) -> str:
 	return f"\x1b[1m{s}\x1b[22m"
 

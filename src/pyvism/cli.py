@@ -1,11 +1,6 @@
 from argparse import ArgumentParser, FileType, Namespace
 
-from result import Err, Ok
-
-from pyvism.compiler import Compiler
-from pyvism.repl import repl
-from pyvism.runtime.errors import report_abortion
-from pyvism.vm import VM
+from pyvism.vm.runner import run
 
 
 def get_args(argv: list[str] | None = None) -> Namespace:
@@ -23,20 +18,10 @@ def main_debug(argv: list[str] | None = None) -> int:
 
 	match args.subcommand:
 		case "run":
-			compiler = Compiler(args.file)
-			vm = VM()
-			match (result := compiler.compile()):
-				case Ok(bytecode):
-					vm.run(bytecode)
-				case Err(errors):
-					for error in errors:
-						error.throw()
-					report_abortion()
-					return 1
+			return run(args.file)
 		case _:
-			return repl()
-
-	return 0
+			raise NotImplementedError("repl")
+			# return repl()
 
 
 def main() -> int:
