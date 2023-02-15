@@ -2,7 +2,6 @@ import os
 import sys
 from dataclasses import dataclass
 from dataclasses import field
-from os import linesep
 from typing import ClassVar
 
 
@@ -49,7 +48,7 @@ class MessageLine:
 		)
 
 	def __repr__(self) -> str:
-		return f"{self.get_line()}{linesep}{self.get_subline()}"
+		return f"{self.get_line()}{os.linesep}{self.get_subline()}"
 
 
 class InfoLine(MessageLine):
