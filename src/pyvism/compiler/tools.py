@@ -443,7 +443,7 @@ class ModeBufferMap(BufferMap[Mode]):
 		return buffer_map
 
 	def get_buffer(self, mode: Mode) -> StringIO:
-		return self[mode]  # type: ignore
+		return self[mode]
 
 
 # *- Compiler utils -* #
@@ -746,6 +746,10 @@ def is_matching_number_of_operands(
 	"""
 
 	return None not in operands
+
+
+def is_identifier_defined(typedef: TypeDef) -> TypeGuard[PosTypeDef]:
+	return isinstance(typedef, PosTypeDef)
 
 
 # *- CUSTOM I/O -* #

@@ -330,3 +330,24 @@ def _E010_pretty_args_types(args_types: tuple[type, *tuple[type, ...]]) -> str:
 	return (
 		", ".join(map(lambda t: f"`{t.__name__}`", except_last)) + f" and `{last.__name__}`"
 	)
+
+
+# E011: undefined identifier
+def E011(file: FileHandler, state: ParsingState) -> Error:
+	"""
+	# E011: undefined identifier
+
+	## Example
+
+	>>> $0 ^l "x" ^n
+
+	`x` is not a defined identifier.
+	"""
+
+	undefined_identifier = get_buffer_eval_no_E002(state)
+
+	message = "undefined identifier"
+	summary = f"undefined identifier `{undefined_identifier}`"
+	error_line = ErrorLine(*file.freeze_position(state.mode_spos), message)
+
+	return Error("E011", summary, file.name, error_line)

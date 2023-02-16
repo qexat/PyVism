@@ -11,6 +11,7 @@ from pyvism.compiler.tools import CARET_MODES
 from pyvism.compiler.tools import DataStorageKind
 from pyvism.compiler.tools import discarded_char
 from pyvism.compiler.tools import FileHandler
+from pyvism.compiler.tools import is_identifier_defined
 from pyvism.compiler.tools import is_matching_number_of_operands
 from pyvism.compiler.tools import macro_mode_request
 from pyvism.compiler.tools import MacroKind
@@ -30,6 +31,7 @@ from pyvism.errsys.errors import E007
 from pyvism.errsys.errors import E008
 from pyvism.errsys.errors import E009
 from pyvism.errsys.errors import E010
+from pyvism.errsys.errors import E011
 from pyvism.errsys.tools import Error
 from pyvism.frontend.map import CompilationTarget
 from result import Err
@@ -115,6 +117,10 @@ class Compiler:
 						iri = MEMCH(self.state.target.id, value_t, (value,), (value_t,))
 						self.state.ir.append(iri)
 					case DataStorageKind.Register:
+						if not is_identifier_defined(self.state.get_target_typedef()):
+							self.push_error(E011)  # E011: undefined identifier
+							return
+
 						self.state.registers[target.id] = value
 						# Do NOTHING, registers = compile time only
 					case DataStorageKind.Stream:
