@@ -15,6 +15,7 @@ __version__ = "2.1.1"
 
 import os
 from random import choice
+
 from pyvism.py_utils import bold
 from pyvism.py_utils import color_rgb
 from pyvism.py_utils import light

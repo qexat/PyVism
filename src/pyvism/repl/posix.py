@@ -183,7 +183,8 @@ class REPL:
 					write_out_new_line()
 					return
 				case MagicKey.Newline:
-					write_out("\x1b[39m\n")
+					write_out("\x1b[39m")
+					write_out_new_line()
 					if buffer_value := self.buffer.getvalue():
 						if self.is_command_mode:
 							self.run_command()
@@ -224,6 +225,8 @@ def start() -> int:
 		r.start()
 	finally:
 		write_file_lines(REPL_HISTORY_FILE, list(reversed(r.history)))
+		write_out_new_line()
 		print(light(f"Saved session history in {REPL_HISTORY_FILE!r}."))
+		write_out_new_line()
 		print(color("👋️ Goodbye!", 3))
 		return 0
