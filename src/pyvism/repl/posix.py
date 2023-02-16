@@ -29,13 +29,19 @@ from result import Ok
 
 
 class REPL:
-	def __init__(self, synopsis: str = REPL_SYNOPSIS, prompt: str = REPL_PROMPT) -> None:
+	def __init__(
+		self,
+		synopsis: str = REPL_SYNOPSIS,
+		prompt: str = REPL_PROMPT,
+		**kwargs: bool,
+	) -> None:
 		print(synopsis)
 		self.prompt = prompt
 
 		self.history = read_file_lines(REPL_HISTORY_FILE)
 		self.history.reverse()
 		self.history_pos = 0
+		self.STORE_INVALID_INPUT = kwargs.get("store_invalid_input", False)
 
 		self.buffer = StringIO()
 		self.last_entered = ""
@@ -201,8 +207,9 @@ class REPL:
 						if self.is_command_mode:
 							self.run_command()
 						else:
-							self.history.insert(0, buffer_value)
 							self.eval_input()
+							if not self.error_status or self.STORE_INVALID_INPUT:
+								self.history.insert(0, buffer_value)
 					self.reset()
 				case MagicKey.Tab | MagicKey.Right | MagicKey.Left:
 					ring_bell()
@@ -229,13 +236,17 @@ class REPL:
 						self.write(char)
 
 
-def start(*, raise_python_exceptions: bool = False) -> int:
+def start(**kwargs: bool) -> int:
 	"""
 	Convenient function to set up a REPL and start it.
 	When exiting, save the history into a file.
 	"""
 
-	r = REPL()
+	RAISE_PYTHON_EXCEPTIONS = kwargs.get("raise_python_exceptions", False)
+	STORE_INVALID_INPUT = kwargs.get("store_invalid_input", False)
+
+	r = REPL(store_invalid_input=STORE_INVALID_INPUT)
+
 	exit_code = 0
 	exc: Exception | None = None
 
@@ -253,7 +264,7 @@ def start(*, raise_python_exceptions: bool = False) -> int:
 		write_out_new_line()
 		print(color("👋️ Goodbye!", 3))
 
-		if exc is not None and raise_python_exceptions:
+		if exc is not None and RAISE_PYTHON_EXCEPTIONS:
 			raise exc
 
 		return exit_code

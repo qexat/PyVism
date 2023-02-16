@@ -11,6 +11,7 @@ from pyvism.vm.runner import run
 def get_args(argv: list[str] | None = None) -> Namespace:
 	parser = ArgumentParser()
 	parser.add_argument("--raise-python-exceptions", action="store_true")
+	parser.add_argument("--store-invalid-input", action="store_true")
 
 	subparsers = parser.add_subparsers(dest="subcommand", required=False)
 
@@ -35,7 +36,10 @@ def main_debug(argv: list[str] | None = None) -> int:
 					),
 				)
 				return 1
-			return start(raise_python_exceptions=args.raise_python_exceptions)
+			return start(
+				raise_python_exceptions=args.raise_python_exceptions,
+				store_invalid_input=args.store_invalid_input,
+			)
 
 
 def main() -> int:

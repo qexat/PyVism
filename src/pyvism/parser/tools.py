@@ -335,7 +335,7 @@ class ModeBufferMap(BufferMap[Mode]):
 
 class ParsingState:
 	"""
-	A special class for the compiler to keep track of parsing data.
+	A special class to keep track of parsing data.
 	Technically a finite state machine.
 	"""
 
