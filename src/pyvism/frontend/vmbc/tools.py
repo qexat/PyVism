@@ -1,18 +1,18 @@
 import inspect
+import sys
 from collections.abc import Callable
 from dataclasses import dataclass
 from dataclasses import field
 from io import StringIO
-import sys
 from typing import Any
+from typing import Generic
 from typing import Self
 from typing import TextIO
-from typing import Generic
 from typing import TypeVarTuple
 
 from pyvism.constants import STREAM_IDS
 
-Ts = TypeVarTuple("Ts")
+Ts = TypeVarTuple('Ts')
 
 
 class StreamMap(dict[int, TextIO]):
@@ -37,7 +37,7 @@ class VMState:
 
 	def __post_init__(self) -> None:
 		self.streams = StreamMap.new(self.stdout_endpoint, self.stderr_endpoint)
-		self.stdout_fd = STREAM_IDS["stdout"]
+		self.stdout_fd = STREAM_IDS['stdout']
 
 
 @dataclass
@@ -45,7 +45,7 @@ class instruction(Generic[*Ts]):
 	mnemonic: Callable[[VMState, *Ts], VMState]
 	operands: tuple[*Ts]
 
-	def __rshift__(self, other: "instruction[*tuple[Any, ...]]") -> "instruction[*Ts]":
+	def __rshift__(self, other: 'instruction[*tuple[Any, ...]]') -> 'instruction[*Ts]':
 		@mnemonic
 		def _(ms: VMState, *operands: *Ts) -> VMState:
 			return other.mnemonic(self.mnemonic(ms, *operands), *other.operands)

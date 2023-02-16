@@ -25,10 +25,10 @@ class VM:
 					self.state = instr.run(self.state)
 				except Exception as e:
 					print(
-						f"\x1b[1;31mRuntime exception:",
-						f"  {type(e).__name__}: {e}",
-						f"\n[Illegal operation]\x1b[22;39m",
-						sep="\n",
+						f'\x1b[1;31mRuntime exception:',
+						f'  {type(e).__name__}: {e}',
+						f'\n[Illegal operation]\x1b[22;39m',
+						sep='\n',
 						file=sys.stderr,
 					)
 					if self.strict_mode:

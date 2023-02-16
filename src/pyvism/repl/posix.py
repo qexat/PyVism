@@ -1,18 +1,20 @@
 """
 REPL for POSIX-based systems.
 """
-
 from io import StringIO
 
+from pyvism import qtheme
 from pyvism.compiler.compiler import Compiler
 from pyvism.constants import REPL_HISTORY_FILE
 from pyvism.constants import REPL_PROMPT
 from pyvism.constants import REPL_SYNOPSIS
+from pyvism.errsys.tools import report_panic
 from pyvism.frontend.map import CompilationTarget
 from pyvism.py_utils import color
-from pyvism.py_utils import light
+from pyvism.py_utils import color_rgb
 from pyvism.py_utils import ends_with_new_line
 from pyvism.py_utils import get_key
+from pyvism.py_utils import light
 from pyvism.py_utils import MagicKey
 from pyvism.py_utils import read_file_lines
 from pyvism.py_utils import ring_bell
@@ -36,15 +38,20 @@ class REPL:
 		self.history_pos = 0
 
 		self.buffer = StringIO()
-		self.last_entered = ""
+		self.last_entered = ''
 		self.is_command_mode: bool = False
 		self.pos = 0
-		write_out(prompt)
+		self.error_status: bool = False
+		self.write_prompt()
 
 		self.stdout = StringIO()
 
 		self.compiler = Compiler(self.buffer)
 		self.vm = VM(self.stdout)
+
+	def write_prompt(self) -> None:
+		prompt_color = qtheme.RED if self.error_status else qtheme.WHITE
+		write_out(color_rgb(self.prompt, prompt_color))
 
 	def print_stdout(self) -> None:
 		"""
@@ -56,7 +63,7 @@ class REPL:
 		write_out(stdout_contents)
 
 		if not ends_with_new_line(stdout_contents):
-			write_out(light("⏎"))
+			write_out(light('⏎'))
 			write_out_new_line()
 
 	def run_command(self) -> None:
@@ -66,8 +73,10 @@ class REPL:
 
 		if (cmd := self.buffer.getvalue()) in Commands.keys():
 			Commands[cmd].value()
+			self.error_status = False
 		else:
-			print(color(f"Error: {cmd!r} is not a valid command", 1))
+			print(color(f'Error: {cmd!r} is not a valid command', 1))
+			self.error_status = True
 
 	def eval_input(self) -> None:
 		"""
@@ -83,9 +92,11 @@ class REPL:
 			case Ok(bytecode):
 				self.vm.run(bytecode)
 				self.print_stdout()
+				self.error_status = False
 			case Err(errors):
 				for error in errors:
 					error.throw(verbose=False)
+				self.error_status = True
 
 	def highlight(self, string: str) -> str:
 		"""
@@ -93,7 +104,7 @@ class REPL:
 		"""
 
 		final_string = string
-		if string in {"&", "$", "^"}:
+		if string in {'&', '$', '^'}:
 			final_string = color(string, 1)
 		elif string.isdigit():
 			final_string = color(string, 6)
@@ -129,7 +140,7 @@ class REPL:
 		self.buffer = StringIO()
 		self.is_command_mode = False
 		self.pos = 0
-		write_out(self.prompt)
+		self.write_prompt()
 
 	def clear_input(self) -> None:
 		"""
@@ -180,11 +191,11 @@ class REPL:
 		while True:
 			match get_key():
 				case MagicKey.Esc:
-					write_out("\x1b[39m")
+					write_out('\x1b[39m')
 					write_out_new_line()
 					return
 				case MagicKey.Newline:
-					write_out("\x1b[39m")
+					write_out('\x1b[39m')
 					write_out_new_line()
 					if buffer_value := self.buffer.getvalue():
 						if self.is_command_mode:
@@ -204,30 +215,45 @@ class REPL:
 				case MagicKey.Backspace:
 					if self.pos > 0:
 						self.unwrite()
+					elif self.is_command_mode:
+						self.is_command_mode = False
+						write_out('\b \b\x1b[39m')
 				case char:
-					if char == "!" and self.pos == 0:
+					if char == '!' and self.pos == 0:
 						self.is_command_mode = not self.is_command_mode
 						if self.is_command_mode:
-							write_out("\x1b[35m!")
+							write_out('\x1b[35m!')
 						else:
-							write_out("\b \b\x1b[39m")
+							write_out('\b \b\x1b[39m')
 					else:
 						self.write(char)
 
 
-def start() -> int:
+def start(*, raise_python_exceptions: bool = False) -> int:
 	"""
 	Convenient function to set up a REPL and start it.
 	When exiting, save the history into a file.
 	"""
 
 	r = REPL()
+	exit_code = 0
+	exc: Exception | None = None
+
 	try:
 		r.start()
+	except Exception as e:
+		if not isinstance(e, (KeyboardInterrupt, SystemExit)):
+			report_panic(e)
+			exit_code = 1
+			exc = e
 	finally:
 		write_file_lines(REPL_HISTORY_FILE, list(reversed(r.history)))
 		write_out_new_line()
-		print(light(f"Saved session history in {REPL_HISTORY_FILE!r}."))
+		print(light(f'Saved session history in {REPL_HISTORY_FILE!r}.'))
 		write_out_new_line()
-		print(color("👋️ Goodbye!", 3))
-		return 0
+		print(color('👋️ Goodbye!', 3))
+
+		if exc is not None and raise_python_exceptions:
+			raise exc
+
+		return exit_code

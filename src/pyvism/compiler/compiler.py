@@ -7,18 +7,11 @@ from pyvism.backend.instructions import MEMCH
 from pyvism.backend.instructions import SWRITE
 from pyvism.backend.interface import get_pseudo_mnemonic
 from pyvism.compiler.macros import macro_map
-from pyvism.compiler.tools import CARET_MODES
+from pyvism.compiler.tools import CompilerState
 from pyvism.compiler.tools import DataStorageKind
-from pyvism.compiler.tools import discarded_char
 from pyvism.compiler.tools import FileHandler
 from pyvism.compiler.tools import is_identifier_defined
 from pyvism.compiler.tools import is_matching_number_of_operands
-from pyvism.compiler.tools import macro_mode_request
-from pyvism.compiler.tools import MacroKind
-from pyvism.compiler.tools import Mode
-from pyvism.compiler.tools import OPERATION_MODES
-from pyvism.compiler.tools import ParsingState
-from pyvism.compiler.tools import program_mode_request
 from pyvism.compiler.typechecking import static_type_check
 from pyvism.constants import ESCAPABLE_CHARS
 from pyvism.errsys.errors import E001
@@ -34,12 +27,19 @@ from pyvism.errsys.errors import E010
 from pyvism.errsys.errors import E011
 from pyvism.errsys.tools import Error
 from pyvism.frontend.map import CompilationTarget
+from pyvism.parser.tools import CARET_MODES
+from pyvism.parser.tools import discarded_char
+from pyvism.parser.tools import macro_mode_request
+from pyvism.parser.tools import MacroKind
+from pyvism.parser.tools import Mode
+from pyvism.parser.tools import OPERATION_MODES
+from pyvism.parser.tools import program_mode_request
 from result import Err
 from result import Ok
 from result import Result
 
 
-T = TypeVar("T")
+T = TypeVar('T')
 
 
 # *- Compiler -* #
@@ -52,7 +52,7 @@ class Compiler:
 
 	def __init__(self, file: TextIO) -> None:
 		self.file = FileHandler(file)
-		self.state: ParsingState = ParsingState()
+		self.state: CompilerState = CompilerState()
 
 	def change_file(self, new_file: TextIO) -> None:
 		"""
@@ -60,9 +60,10 @@ class Compiler:
 		"""
 
 		self.file = FileHandler(new_file)
+		self.state.reset()
 		self.state.errors = []
 
-	def push_error(self, error: Callable[[FileHandler, ParsingState], Error]) -> None:
+	def push_error(self, error: Callable[[FileHandler, CompilerState], Error]) -> None:
 		"""
 		Convenient function to easily push an error to the error stack.
 		"""
@@ -97,7 +98,7 @@ class Compiler:
 						pass
 					case Err(undef_target_exc):
 						if undef_target_exc:  # !UNREACHABLE
-							raise RuntimeError("undefined target id")
+							raise RuntimeError('undefined target id')
 						self.push_error(E002)  # E002: invalid literal
 						return
 
@@ -265,7 +266,7 @@ class Compiler:
 					self.process_buffered()
 					self.file.pos += 1
 					self.run_macro()
-				elif not discarded_char(self.state, self.file):
+				elif not discarded_char(self.file, self.state):
 					if self.state.mode in OPERATION_MODES:
 						self.process_char()
 						pass
