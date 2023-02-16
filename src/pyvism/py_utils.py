@@ -88,15 +88,15 @@ def ends_with_new_line(string: str) -> bool:
 
 
 class MagicKey(MapLikeEnum):
-	Tab = 9
-	Newline = 10
-	BackWord = 23
-	Esc = 27
-	Up = 65
-	Down = 66
-	Right = 67
-	Left = 68
-	Backspace = 127
+	Tab = False, 9
+	Newline = False, 10
+	BackWord = False, 23
+	Esc = False, 27
+	Up = True, 65
+	Down = True, 66
+	Right = True, 67
+	Left = True, 68
+	Backspace = False, 127
 
 
 def get_key() -> str | MagicKey:
@@ -105,7 +105,12 @@ def get_key() -> str | MagicKey:
 
 	try:
 		byteseq = os.read(sys.stdin.fileno(), 3).decode()
-		key = ord(byteseq) if len(byteseq) == 1 else ord(byteseq[-1])
-		return MagicKey.get(key, chr(key))
+		is_escaping = False
+		if len(byteseq) == 1:
+			key = ord(byteseq)
+		else:
+			key = ord(byteseq[-1])
+			is_escaping = byteseq[:-1] == "\x1b["
+		return MagicKey.get((is_escaping, key), chr(key))
 	finally:
 		termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_state)

@@ -47,6 +47,7 @@ class REPL:
 		write_out(stdout_contents)
 
 		if not ends_with_new_line(stdout_contents):
+			write_out(light("⏎"))
 			write_out_new_line()
 
 	def run_command(self) -> None:

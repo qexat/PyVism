@@ -117,7 +117,7 @@ class Compiler:
 						iri = MEMCH(self.state.target.id, value_t, (value,), (value_t,))
 						self.state.ir.append(iri)
 					case DataStorageKind.Register:
-						if not is_identifier_defined(self.state.get_target_typedef()):
+						if not is_identifier_defined(self.state.typedefs.get_from_identifier(value)):
 							self.push_error(E011)  # E011: undefined identifier
 							return
 
