@@ -1,15 +1,17 @@
-from argparse import ArgumentParser, FileType, Namespace
+from argparse import ArgumentParser
+from argparse import FileType
+from argparse import Namespace
 
-from result import Err, Ok
-
-from pyvism.compiler import Compiler
-from pyvism.repl import repl
-from pyvism.runtime.errors import report_abortion
-from pyvism.vm import VM
+from pyvism.repl.repl import start
+from pyvism.vm.runner import run
 
 
 def get_args(argv: list[str] | None = None) -> Namespace:
 	parser = ArgumentParser()
+	parser.add_argument("--force-universal", action="store_true")
+	parser.add_argument("--raise-python-exceptions", action="store_true")
+	parser.add_argument("--store-invalid-input", action="store_true")
+
 	subparsers = parser.add_subparsers(dest="subcommand", required=False)
 
 	parser_run = subparsers.add_parser("run", description="Run a Vism file.")
@@ -23,20 +25,13 @@ def main_debug(argv: list[str] | None = None) -> int:
 
 	match args.subcommand:
 		case "run":
-			compiler = Compiler(args.file)
-			vm = VM()
-			match (result := compiler.compile()):
-				case Ok(bytecode):
-					vm.run(bytecode)
-				case Err(errors):
-					for error in errors:
-						error.throw()
-					report_abortion()
-					return 1
+			return run(args.file)
 		case _:
-			return repl()
-
-	return 0
+			return start(
+				force_universal=args.force_universal,
+				raise_python_exceptions=args.raise_python_exceptions,
+				store_invalid_input=args.store_invalid_input,
+			)
 
 
 def main() -> int:
