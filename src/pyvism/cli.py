@@ -1,7 +1,10 @@
+import os
 from argparse import ArgumentParser
 from argparse import FileType
 from argparse import Namespace
 
+from pyvism.py_utils import color
+from pyvism.repl.repl import start
 from pyvism.vm.runner import run
 
 
@@ -22,8 +25,14 @@ def main_debug(argv: list[str] | None = None) -> int:
 		case "run":
 			return run(args.file)
 		case _:
-			raise NotImplementedError("repl")
-			# return repl()
+			if os.name != "posix":
+				print(
+					color(
+						"Sorry, the REPL is currently not available for your OS. (required: POSIX)", 1
+					)
+				)
+				return 1
+			return start()
 
 
 def main() -> int:

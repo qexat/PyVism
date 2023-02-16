@@ -1,6 +1,6 @@
 from pyvism.frontend import vmbc
-from pyvism.py_utils import SupportsContains
+from pyvism.py_utils import MapLikeEnum
 
 
-class CompilationTarget(SupportsContains):
+class CompilationTarget(MapLikeEnum):
 	Bytecode = vmbc.frontend

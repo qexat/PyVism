@@ -11,10 +11,14 @@ __all__ = (
 )
 
 
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 
+import os
+from random import choice
 from pyvism.py_utils import bold
-from pyvism.py_utils import color
+from pyvism.py_utils import color_rgb
+from pyvism.py_utils import light
+from pyvism import qtheme
 
 
 REGISTER_MAX_ADDR = 0x10
@@ -39,7 +43,15 @@ NULL = -1
 
 STREAM_IDS = {"null": NULL, "stdout": 0, "stderr": 1}
 
-REPL_PROMPT = color(bold("VISM") + " ~> ", 7)
+
+REPL_SYNOPSIS = (
+	bold(color_rgb("PyVism", choice(qtheme.COLORS)))
+	+ color_rgb(" :: ", qtheme.FAINT)
+	+ color_rgb(f"v{__version__}", qtheme.NORMAL)
+)
+REPL_PROMPT = light(color_rgb("> ", qtheme.WHITE))
+CMD_MODE_CHAR = "!"
+REPL_HISTORY_FILE = os.path.abspath("src/pyvism/repl/.history.rvism")
 
 
 confusable_symbols: dict[str, str] = {"*": "×"}

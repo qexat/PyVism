@@ -34,7 +34,7 @@ from pyvism.constants import PRGM_MODE_CHAR
 from pyvism.constants import REGISTER_MAX_ADDR
 from pyvism.constants import STREAM_IDS
 from pyvism.errsys.tools import Error
-from pyvism.py_utils import SupportsContains
+from pyvism.py_utils import MapLikeEnum
 from result import Err
 from result import Ok
 from result import Result
@@ -42,6 +42,20 @@ from result import Result
 
 T = TypeVar("T")
 KT = TypeVar("KT")
+
+
+def get_buffer_lines(buffer: TextIO) -> list[str]:
+	"""
+	Return the buffer contents split by lines.
+
+	Reason of existence:
+	In the REPL, `buffer.read()` will return an empty string.
+	Therefore, we need to `buffer.getvalue()` instead.
+	"""
+
+	contents = buffer.getvalue() if isinstance(buffer, StringIO) else buffer.read()
+
+	return contents.splitlines()
 
 
 class FileHandler:
@@ -128,7 +142,7 @@ class FileHandler:
 		if isinstance(self.buffer, StringIO):
 			self.buffer.name = "<stdin>"
 
-		self.__lines = self.buffer.read().splitlines()
+		self.__lines = get_buffer_lines(self.buffer)
 
 		self.line_index: int = 0
 		self.pos: int = 0
@@ -154,7 +168,7 @@ class FileHandler:
 # *- TARGETS, KINDS, MODES -* #
 
 
-class DataStorageKind(SupportsContains):
+class DataStorageKind(MapLikeEnum):
 	"""
 	Abstract enum that maps data storage kinds to their symbols.
 	"""
@@ -237,7 +251,7 @@ class DataStorageByIdentifier(DataStorage[str]):
 		Get the name of the data storage that represents its ID by an identifier, such as memory slots.
 		"""
 
-		return f"{self.kind.name}[{self.id}"
+		return f"{self.kind.name}[{self.id}]"
 
 
 data_storage_map: dict[InternalType[Any], type[DataStorage[Any]]] = {
@@ -354,11 +368,11 @@ class TypeDefTracker(dict[str, TypeDef]):
 # *- Compilation built-ins & constants -* #
 
 
-class MacroKind(SupportsContains):
+class MacroKind(MapLikeEnum):
 	Debug = "d"
 
 
-class ModeType(SupportsContains):
+class ModeType(MapLikeEnum):
 	"""
 	Mode type for Assign mode.
 	"""
@@ -386,7 +400,7 @@ OPERATION_MODES = {Mode.Normal}
 class BufferMap(dict[KT, StringIO], ABC):
 	"""
 	A convenient abstract class to map each value of a type to a buffer, represented by
-	a `StringIO` object.
+	a `TextIO` object.
 	"""
 
 	def add(self, id: KT) -> KT:
@@ -424,9 +438,12 @@ class ModeBufferMap(BufferMap[Mode]):
 		buffer_map = cls()
 
 		for mode in Mode:
-			BufferMap[Mode].add(buffer_map, mode)
+			buffer_map.add(mode)
 
 		return buffer_map
+
+	def get_buffer(self, mode: Mode) -> StringIO:
+		return self[mode]  # type: ignore
 
 
 # *- Compiler utils -* #

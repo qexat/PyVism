@@ -2,39 +2,42 @@ import inspect
 from collections.abc import Callable
 from dataclasses import dataclass
 from dataclasses import field
+from io import StringIO
+import sys
 from typing import Any
+from typing import Self
+from typing import TextIO
 from typing import Generic
 from typing import TypeVarTuple
 
-from pyvism.compiler.tools import BufferMap
 from pyvism.constants import STREAM_IDS
 
 Ts = TypeVarTuple("Ts")
 
 
-class StreamMap(BufferMap[int]):
+class StreamMap(dict[int, TextIO]):
 	@classmethod
-	def new(cls) -> "StreamMap":
+	def new(cls, stdout: TextIO = sys.stdout, stderr: TextIO = sys.stderr) -> Self:
 		stream_map = cls()
 
-		for id in STREAM_IDS.values():
-			BufferMap[int].add(stream_map, id)
+		stream_map[0] = stdout
+		stream_map[1] = stderr
 
 		return stream_map
-
-	def add(self) -> int:
-		fd = len(self)
-		return super().add(fd)
 
 
 @dataclass
 class VMState:
+	stdout_endpoint: TextIO
+	stderr_endpoint: TextIO
+	devnull_endpoint: TextIO = field(default_factory=StringIO)
 	memory: dict[str, Any] = field(default_factory=dict)
-	streams: StreamMap = field(default_factory=StreamMap.new)
-	stdout: int = field(init=False)
+	streams: StreamMap = field(init=False)
+	stdout_fd: int = field(init=False)
 
 	def __post_init__(self) -> None:
-		self.stdout = STREAM_IDS["stdout"]
+		self.streams = StreamMap.new(self.stdout_endpoint, self.stderr_endpoint)
+		self.stdout_fd = STREAM_IDS["stdout"]
 
 
 @dataclass

@@ -1,13 +1,13 @@
 from builtins import divmod as _divmod
-from io import StringIO
 from typing import Any
+from typing import TextIO
 
 from pyvism.compiler.tools import stream_endpoints
 from pyvism.frontend.vmbc.tools import mnemonic
 from pyvism.frontend.vmbc.tools import VMState
 
 
-def _get_stream(ms: VMState, fd: int) -> StringIO:
+def _get_stream(ms: VMState, fd: int) -> TextIO:
 	stream = ms.streams.get(fd)
 
 	if stream is None:
@@ -38,20 +38,18 @@ def flush(vms: VMState, fd: int) -> VMState:
 
 	endpoint = stream_endpoints[fd]
 
-	endpoint.write(stream.getvalue())
+	endpoint.write(stream.read())
 	endpoint.flush()
-
-	vms.streams.reset_buffer(fd)
 
 	return vms
 
 
 @mnemonic
-def print(vms: VMState, memsrc1: str) -> VMState:
+def print(vms: VMState, _, memsrc1: str) -> VMState:
 	value = vms.memory[memsrc1]
 
 	if value is not None:
-		vms = (write(vms.stdout, str(value)) >> flush(vms.stdout)).run(vms)
+		vms = (write(vms.stdout_fd, str(value)) >> flush(vms.stdout_fd)).run(vms)
 
 	return vms
 

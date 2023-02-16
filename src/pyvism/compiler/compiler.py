@@ -32,7 +32,6 @@ from pyvism.errsys.errors import E009
 from pyvism.errsys.errors import E010
 from pyvism.errsys.tools import Error
 from pyvism.frontend.map import CompilationTarget
-from pyvism.frontend.tools import TargetFrontEnd
 from result import Err
 from result import Ok
 from result import Result
@@ -52,6 +51,14 @@ class Compiler:
 	def __init__(self, file: TextIO) -> None:
 		self.file = FileHandler(file)
 		self.state: ParsingState = ParsingState()
+
+	def change_file(self, new_file: TextIO) -> None:
+		"""
+		Convenient function to change the file while keeping the compilation state.
+		"""
+
+		self.file = FileHandler(new_file)
+		self.state.errors = []
 
 	def push_error(self, error: Callable[[FileHandler, ParsingState], Error]) -> None:
 		"""
@@ -229,7 +236,7 @@ class Compiler:
 
 		self.state.write_buffer(final_char)
 
-	def compile(self, target: TargetFrontEnd[T]) -> Result[list[T], list[Error]]:
+	def compile(self, target: CompilationTarget) -> Result[list[Any], list[Error]]:
 		"""
 		Compile the file code into the specified compilation target.
 
@@ -239,6 +246,8 @@ class Compiler:
 
 		Return either a list of elements (instructions or LOC) or a list of errors.
 		"""
+
+		frontend = target.value
 
 		while not self.file.is_eof:
 			while not self.file.is_eol:
@@ -265,7 +274,7 @@ class Compiler:
 			self.process_buffered()
 			self.file.move_next_line()
 
-		return Ok(target(self.state.ir))
+		return Ok(frontend(self.state.ir))
 
 
 def compile(file: TextIO, target: CompilationTarget) -> Result[list[Any], list[Error]]:
@@ -273,4 +282,4 @@ def compile(file: TextIO, target: CompilationTarget) -> Result[list[Any], list[E
 	Compile the file code into the specified compilation target.
 	"""
 
-	return Compiler(file).compile(target.value)
+	return Compiler(file).compile(target)
