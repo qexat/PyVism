@@ -1,15 +1,14 @@
-import os
 from argparse import ArgumentParser
 from argparse import FileType
 from argparse import Namespace
 
-from pyvism.py_utils import color
-from pyvism.repl.posix import start
+from pyvism.repl.repl import start
 from pyvism.vm.runner import run
 
 
 def get_args(argv: list[str] | None = None) -> Namespace:
 	parser = ArgumentParser()
+	parser.add_argument("--force-universal", action="store_true")
 	parser.add_argument("--raise-python-exceptions", action="store_true")
 	parser.add_argument("--store-invalid-input", action="store_true")
 
@@ -28,15 +27,8 @@ def main_debug(argv: list[str] | None = None) -> int:
 		case "run":
 			return run(args.file)
 		case _:
-			if os.name != "posix":
-				print(
-					color(
-						"Sorry, the REPL is currently not available for your OS. (required: POSIX)",
-						1,
-					),
-				)
-				return 1
 			return start(
+				force_universal=args.force_universal,
 				raise_python_exceptions=args.raise_python_exceptions,
 				store_invalid_input=args.store_invalid_input,
 			)

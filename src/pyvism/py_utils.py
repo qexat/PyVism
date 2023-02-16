@@ -3,10 +3,16 @@ Some utils to extend Python.
 """
 import os
 import sys
-import termios
-import tty
 from enum import Enum
 from typing import Any
+
+if os.name == "posix":
+	import termios
+	import tty
+
+	SPECIAL_FN_KEY = "\x1b["
+else:
+	SPECIAL_FN_KEY = "\xe0["
 
 
 class MapLikeEnum(Enum):
@@ -99,18 +105,25 @@ class MagicKey(MapLikeEnum):
 	Backspace = False, 127
 
 
-def get_key() -> str | MagicKey:
-	old_state = termios.tcgetattr(sys.stdin)
-	tty.setcbreak(sys.stdin.fileno())
+if os.name == "posix":
 
-	try:
-		byteseq = os.read(sys.stdin.fileno(), 3).decode()
-		is_escaping = False
-		if len(byteseq) == 1:
-			key = ord(byteseq)
-		else:
-			key = ord(byteseq[-1])
-			is_escaping = byteseq[:-1] == "\x1b["
-		return MagicKey.get((is_escaping, key), chr(key))
-	finally:
-		termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_state)
+	def get_key() -> str | MagicKey:
+		old_state = termios.tcgetattr(sys.stdin)
+		tty.setcbreak(sys.stdin.fileno())
+
+		try:
+			byteseq = os.read(sys.stdin.fileno(), 3).decode()
+			is_special = False
+			if len(byteseq) == 1:
+				key = ord(byteseq)
+			else:
+				key = ord(byteseq[-1])
+				is_special = byteseq[:-1] == SPECIAL_FN_KEY
+			return MagicKey.get((is_special, key), chr(key))
+		finally:
+			termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_state)
+
+else:
+
+	def get_key() -> str | MagicKey:
+		raise NotImplementedError
