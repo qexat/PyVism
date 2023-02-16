@@ -8,11 +8,18 @@ from pyvism.py_utils import MapLikeEnum
 
 
 class replc:
+	"""
+	Special wrapper class around the REPL commands functions.
+
+	Exists because enum members that have directly functions as values
+	are not treated as actual members.
+	"""
+
 	def __init__(self, func: Callable[[], None]) -> None:
 		self.func = func
 		self.__doc__ = self.func.__doc__
 
-	def run(self) -> None:
+	def __call__(self) -> None:
 		self.func()
 
 
@@ -40,6 +47,10 @@ def version() -> None:
 
 
 class Commands(MapLikeEnum):
+	"""
+	REPL Commands.
+	"""
+
 	help = help
 	exit = exit
 	version = version

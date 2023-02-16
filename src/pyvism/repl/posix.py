@@ -1,3 +1,7 @@
+"""
+REPL for POSIX-based systems.
+"""
+
 from io import StringIO
 
 from pyvism.compiler.compiler import Compiler
@@ -43,6 +47,11 @@ class REPL:
 		self.vm = VM(self.stdout)
 
 	def print_stdout(self) -> None:
+		"""
+		Convenient method to print the caught output from executed Vism code
+		to the actual stdout.
+		"""
+
 		stdout_contents = self.stdout.getvalue()
 		write_out(stdout_contents)
 
@@ -51,12 +60,24 @@ class REPL:
 			write_out_new_line()
 
 	def run_command(self) -> None:
+		"""
+		Run a REPL command (starting with `!`)
+		"""
+
 		if (cmd := self.buffer.getvalue()) in Commands.keys():
-			Commands[cmd].value.run()
+			Commands[cmd].value()
 		else:
 			print(color(f"Error: {cmd!r} is not a valid command", 1))
 
 	def eval_input(self) -> None:
+		"""
+		Evaluate the input by using the compiler.
+
+		Notes:
+		- the standard output is redirected to `REPL.stdout`
+		- the state of the compiler and VM are saved across the lines
+		"""
+
 		self.compiler.change_file(self.buffer)
 		match self.compiler.compile(CompilationTarget.Bytecode):
 			case Ok(bytecode):
@@ -67,6 +88,10 @@ class REPL:
 					error.throw(verbose=False)
 
 	def highlight(self, string: str) -> str:
+		"""
+		Basic inline syntax highlighting of the live input.
+		"""
+
 		final_string = string
 		if string in {"&", "$", "^"}:
 			final_string = color(string, 1)
@@ -75,12 +100,20 @@ class REPL:
 		return final_string
 
 	def write(self, string: str) -> None:
+		"""
+		Handy function to write the live input to the buffer + stdout.
+		"""
+
 		write_out(self.highlight(string))
 		self.buffer.write(string)
 		self.last_entered = string
 		self.pos += len(string)
 
 	def unwrite(self) -> None:
+		"""
+		Handy function that essentially handles backspaces.
+		"""
+
 		unwrite_out(len(self.last_entered))
 		new_buffer_value = self.buffer.getvalue()[:-1]
 		self.buffer = StringIO()
@@ -88,38 +121,62 @@ class REPL:
 		self.pos -= 1
 
 	def reset(self) -> None:
+		"""
+		Reset the REPL state to initials.
+		"""
+
 		self.history_pos = 0
 		self.buffer = StringIO()
 		self.is_command_mode = False
 		self.pos = 0
 		write_out(self.prompt)
 
-	def clear_line(self) -> None:
+	def clear_input(self) -> None:
+		"""
+		Clear the current input.
+		"""
+
 		for _ in range(self.pos):
 			self.unwrite()
 		self.buffer = StringIO()
 
 	def type(self, string: str) -> None:
+		"""
+		Emulate the provided string being progressively typed in the REPL.
+		"""
+
 		for char in string:
 			self.write(char)
 
 	def history_up(self) -> None:
+		"""
+		If relevant, write the previous entry of history into the input.
+		"""
+
 		if self.history_pos < len(self.history):
-			self.clear_line()
+			self.clear_input()
 			self.type(self.history[self.history_pos])
 			self.history_pos += 1
 		else:
 			ring_bell()
 
 	def history_down(self) -> None:
+		"""
+		If relevant, write the next entry of history into the input.
+		"""
+
 		if self.history_pos > 0:
 			self.history_pos -= 1
-			self.clear_line()
+			self.clear_input()
 			self.type(self.history[self.history_pos])
 		else:
 			ring_bell()
 
 	def start(self) -> None:
+		"""
+		Main function -- Start the REPL.
+		"""
+
 		while True:
 			match get_key():
 				case MagicKey.Esc:
@@ -137,7 +194,7 @@ class REPL:
 				case MagicKey.Tab | MagicKey.Right | MagicKey.Left:
 					ring_bell()
 				case MagicKey.BackWord:
-					self.clear_line()
+					self.clear_input()
 				case MagicKey.Up:
 					self.history_up()
 				case MagicKey.Down:
@@ -157,6 +214,11 @@ class REPL:
 
 
 def start() -> int:
+	"""
+	Convenient function to set up a REPL and start it.
+	When exiting, save the history into a file.
+	"""
+
 	r = REPL()
 	try:
 		r.start()

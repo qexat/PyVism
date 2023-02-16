@@ -1,3 +1,9 @@
+"""
+The colors in this file are borrowed from my personal website theme.
+I happened to also make a TextMate theme from this color scheme that
+you can find here: https://github.com/qexat/qexat-theme
+"""
+
 NORMAL = (202, 178, 250)
 FAINT = (121, 106, 150)
 

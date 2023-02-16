@@ -4,7 +4,7 @@ from argparse import FileType
 from argparse import Namespace
 
 from pyvism.py_utils import color
-from pyvism.repl.repl import start
+from pyvism.repl.posix import start
 from pyvism.vm.runner import run
 
 
