@@ -127,8 +127,11 @@ class REPL:
 				case MagicKey.Newline:
 					write_out("\x1b[39m\n")
 					if buffer_value := self.buffer.getvalue():
-						self.history.insert(0, buffer_value)
-						self.run_command() if self.is_command_mode else self.eval_input()
+						if self.is_command_mode:
+							self.run_command()
+						else:
+							self.history.insert(0, buffer_value)
+							self.eval_input()
 					self.reset()
 				case MagicKey.Tab | MagicKey.Right | MagicKey.Left:
 					ring_bell()
