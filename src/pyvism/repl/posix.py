@@ -170,7 +170,7 @@ class REPL:
 			self.clear_input()
 			self.type(self.history[self.history_pos])
 		else:
-			ring_bell()
+			self.clear_input()
 
 	def start(self) -> None:
 		"""
@@ -180,6 +180,7 @@ class REPL:
 		while True:
 			match get_key():
 				case MagicKey.Esc:
+					write_out("\x1b[39m")
 					write_out_new_line()
 					return
 				case MagicKey.Newline:
