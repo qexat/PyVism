@@ -74,7 +74,7 @@ def frontend(ir: list[IRI[LiteralString]]) -> list[AnyInstruction]:
 		elif ir_mnemonic == SFLUSH:
 			bc_mnemonic = flush
 		else:
-			raise ValueError(f'ir instruction {iri.mnemonic.name!r} is not supported')
+			raise ValueError(f"ir instruction {iri.mnemonic.name!r} is not supported")
 
 		bytecode.append(bc_mnemonic(iri.dest, *iri.args))
 

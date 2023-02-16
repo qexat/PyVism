@@ -27,9 +27,9 @@ class replc:
 def help() -> None:
 	"""Prints the available commands."""
 
-	print(bold(color('Available commands:', 4)))
+	print(bold(color("Available commands:", 4)))
 	for cmd in Commands:
-		print('•', color(f'!{cmd.name}', 7), light(f'-- {cmd.value.__doc__}'))
+		print("•", color(f"!{cmd.name}", 7), light(f"-- {cmd.value.__doc__}"))
 
 
 @replc

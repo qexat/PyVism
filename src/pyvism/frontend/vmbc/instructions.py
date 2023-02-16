@@ -11,7 +11,7 @@ def _get_stream(ms: VMState, fd: int) -> TextIO:
 	stream = ms.streams.get(fd)
 
 	if stream is None:
-		raise ValueError(f'stream {stream!r} does not exist or is closed')
+		raise ValueError(f"stream {stream!r} does not exist or is closed")
 
 	return stream
 
@@ -105,7 +105,7 @@ def union(vms: VMState, memdest: str, memsrc1: str, memsrc2: str) -> VMState:
 
 @mnemonic
 def strdiff(vms: VMState, memdest: str, memsrc1: str, memsrc2: str) -> VMState:
-	vms.memory[memdest] = vms.memory[memsrc1].replace(memsrc2, '')
+	vms.memory[memdest] = vms.memory[memsrc1].replace(memsrc2, "")
 
 	return vms
 
@@ -121,6 +121,6 @@ def seqdiff(vms: VMState, memdest: str, memsrc1: str, memsrc2: str) -> VMState:
 @mnemonic
 def pathjoin(vms: VMState, memdest: str, memsrc1: str, memsrc2: str) -> VMState:
 	slot1, slot2 = vms.memory[memsrc1], vms.memory[memsrc2]
-	vms.memory[memdest] = f'{slot1}/{slot2}'
+	vms.memory[memdest] = f"{slot1}/{slot2}"
 
 	return vms

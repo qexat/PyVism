@@ -38,7 +38,7 @@ class REPL:
 		self.history_pos = 0
 
 		self.buffer = StringIO()
-		self.last_entered = ''
+		self.last_entered = ""
 		self.is_command_mode: bool = False
 		self.pos = 0
 		self.error_status: bool = False
@@ -63,7 +63,7 @@ class REPL:
 		write_out(stdout_contents)
 
 		if not ends_with_new_line(stdout_contents):
-			write_out(light('⏎'))
+			write_out(light("⏎"))
 			write_out_new_line()
 
 	def run_command(self) -> None:
@@ -75,7 +75,7 @@ class REPL:
 			Commands[cmd].value()
 			self.error_status = False
 		else:
-			print(color(f'Error: {cmd!r} is not a valid command', 1))
+			print(color(f"Error: {cmd!r} is not a valid command", 1))
 			self.error_status = True
 
 	def eval_input(self) -> None:
@@ -104,7 +104,7 @@ class REPL:
 		"""
 
 		final_string = string
-		if string in {'&', '$', '^'}:
+		if string in {"&", "$", "^"}:
 			final_string = color(string, 1)
 		elif string.isdigit():
 			final_string = color(string, 6)
@@ -191,11 +191,11 @@ class REPL:
 		while True:
 			match get_key():
 				case MagicKey.Esc:
-					write_out('\x1b[39m')
+					write_out("\x1b[39m")
 					write_out_new_line()
 					return
 				case MagicKey.Newline:
-					write_out('\x1b[39m')
+					write_out("\x1b[39m")
 					write_out_new_line()
 					if buffer_value := self.buffer.getvalue():
 						if self.is_command_mode:
@@ -217,14 +217,14 @@ class REPL:
 						self.unwrite()
 					elif self.is_command_mode:
 						self.is_command_mode = False
-						write_out('\b \b\x1b[39m')
+						write_out("\b \b\x1b[39m")
 				case char:
-					if char == '!' and self.pos == 0:
+					if char == "!" and self.pos == 0:
 						self.is_command_mode = not self.is_command_mode
 						if self.is_command_mode:
-							write_out('\x1b[35m!')
+							write_out("\x1b[35m!")
 						else:
-							write_out('\b \b\x1b[39m')
+							write_out("\b \b\x1b[39m")
 					else:
 						self.write(char)
 
@@ -249,9 +249,9 @@ def start(*, raise_python_exceptions: bool = False) -> int:
 	finally:
 		write_file_lines(REPL_HISTORY_FILE, list(reversed(r.history)))
 		write_out_new_line()
-		print(light(f'Saved session history in {REPL_HISTORY_FILE!r}.'))
+		print(light(f"Saved session history in {REPL_HISTORY_FILE!r}."))
 		write_out_new_line()
-		print(color('👋️ Goodbye!', 3))
+		print(color("👋️ Goodbye!", 3))
 
 		if exc is not None and raise_python_exceptions:
 			raise exc

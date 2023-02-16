@@ -29,39 +29,39 @@ class MessageLine:
 
 	def get_line(self) -> str:
 		return (
-			'\x1b[34m'
-			+ f'{self.number} | '
-			+ '\x1b[39m'
+			"\x1b[34m"
+			+ f"{self.number} | "
+			+ "\x1b[39m"
 			+ self.content[: self.spos]
-			+ f'\x1b[1;3{self.color}m'
+			+ f"\x1b[1;3{self.color}m"
 			+ self.content[self.spos : self.epos]
-			+ '\x1b[22;39m'
+			+ "\x1b[22;39m"
 			+ self.content[self.epos :]
 		)
 
 	def get_subline(self) -> str:
 		return (
-			' ' * self._ruler_size
-			+ '\x1b[34m| \x1b[39m'
-			+ ' ' * self.spos
-			+ f'\x1b[1;3{self.color}m'
+			" " * self._ruler_size
+			+ "\x1b[34m| \x1b[39m"
+			+ " " * self.spos
+			+ f"\x1b[1;3{self.color}m"
 			+ self.char * (self.epos - self.spos)
-			+ f' {self.message}'
-			+ '\x1b[22;39m'
+			+ f" {self.message}"
+			+ "\x1b[22;39m"
 		)
 
 	def __repr__(self) -> str:
-		return f'{self.get_line()}{os.linesep}{self.get_subline()}'
+		return f"{self.get_line()}{os.linesep}{self.get_subline()}"
 
 
 class InfoLine(MessageLine):
 	color = 4
-	char = '-'
+	char = "-"
 
 
 class ErrorLine(MessageLine):
 	color = 1
-	char = '^'
+	char = "^"
 
 
 @dataclass
@@ -85,10 +85,10 @@ class Error:
 		return len(str(max(line.number for line in [*self.info_lines, self.error_line]))) + 1  # type: ignore
 
 	def _get_ruler_space(self, *, minus_one: bool = False) -> str:
-		return ' ' * (self._get_ruler_size() - minus_one)
+		return " " * (self._get_ruler_size() - minus_one)
 
 	def _padding_line(self) -> str:
-		return color(f'{self._get_ruler_space()}|', 4)
+		return color(f"{self._get_ruler_space()}|", 4)
 
 	@property
 	def name(self) -> str:
@@ -96,27 +96,27 @@ class Error:
 
 	@property
 	def synopsis(self) -> str:
-		return bold(f'[{self.name}]: {self.summary}')
+		return bold(f"[{self.name}]: {self.summary}")
 
 	@property
 	def source(self) -> str:
-		arrow = color(self._get_ruler_space(minus_one=True) + '-->', 4)
-		path = f'{self.source_file}:{self.error_line.number}:{self.error_line.spos+1}'
-		return f'{arrow} {path}'
+		arrow = color(self._get_ruler_space(minus_one=True) + "-->", 4)
+		path = f"{self.source_file}:{self.error_line.number}:{self.error_line.spos+1}"
+		return f"{arrow} {path}"
 
 	@property
 	def lines(self) -> list[MessageLine]:
 		return sorted([*self.info_lines, self.error_line], key=lambda line: line.number)
 
 	def _help_line(self, message: str, *, indent: bool = False) -> str:
-		bullet = color(self._get_ruler_space() + '=', 4)
+		bullet = color(self._get_ruler_space() + "=", 4)
 		base = f"{bullet} {bold('help:')} "
 		return f"{base}{'  ' * indent}{message}"
 
 	@property
 	def hint(self) -> str:
 		if not self.hint_message:
-			return ''
+			return ""
 		return self._help_line(self.hint_message)
 
 	@property
@@ -142,12 +142,12 @@ class Error:
 			err_write()
 
 
-def err_write(s: str = '') -> None:
+def err_write(s: str = "") -> None:
 	print(s, file=stderr)
 
 
 def report_abortion() -> None:
-	err_write(bold(color('error', 1) + ': aborting due to previous error'))
+	err_write(bold(color("error", 1) + ": aborting due to previous error"))
 
 
 def report_panic(reason: Exception) -> None:

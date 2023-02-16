@@ -7,7 +7,7 @@ from result import Err
 from result import Ok
 from result import Result
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def no_op(obj: T) -> T:
@@ -29,6 +29,6 @@ class InternalType(Generic[T]):
 		return Ok(self.caster(s))
 
 
-Address = InternalType('address', r'(?i)[0-9A-F]+', lambda s: int(s, base=16))
-Integer = InternalType('integer', r'[+-]?[0-9]+', int)
-Identifier = InternalType('identifier', r'(?i)[A-Z_]\w*', no_op)
+Address = InternalType("address", r"(?i)[0-9A-F]+", lambda s: int(s, base=16))
+Integer = InternalType("integer", r"[+-]?[0-9]+", int)
+Identifier = InternalType("identifier", r"(?i)[A-Z_]\w*", no_op)

@@ -27,8 +27,8 @@ from result import Err
 from result import Ok
 from result import Result
 
-T = TypeVar('T')
-KT = TypeVar('KT')
+T = TypeVar("T")
+KT = TypeVar("KT")
 
 
 def get_buffer_lines(buffer: TextIO) -> list[str]:
@@ -127,7 +127,7 @@ class FileHandler:
 		# StringIO is marked as having a `name` property
 		# but in reality it does not at runtime
 		if isinstance(self.buffer, StringIO):
-			self.buffer.name = '<stdin>'
+			self.buffer.name = "<stdin>"
 
 		self.__lines = get_buffer_lines(self.buffer)
 
@@ -160,9 +160,9 @@ class DataStorageKind(MapLikeEnum):
 	Abstract enum that maps data storage kinds to their symbols.
 	"""
 
-	Memory = '&'
-	Register = '$'
-	Stream = ':'
+	Memory = "&"
+	Register = "$"
+	Stream = ":"
 
 
 DataStorageTypeMap: dict[DataStorageKind, InternalType[Any]] = {
@@ -178,7 +178,7 @@ class DataStorage(Generic[T]):
 	id: T
 
 	def __repr__(self):
-		return f'\x1b[37m{self.kind.name}\x1b[39m[\x1b[36m{self.id}\x1b[39m]'
+		return f"\x1b[37m{self.kind.name}\x1b[39m[\x1b[36m{self.id}\x1b[39m]"
 
 	@abstractmethod
 	def get_name(self) -> str:
@@ -218,7 +218,7 @@ class DataStorageByAddress(DataStorage[int]):
 		Get the name of the data storage that represents its ID by an hexadecimal address, such as registers.
 		"""
 
-		return f'{self.kind.name}[{self.id:#04x}'
+		return f"{self.kind.name}[{self.id:#04x}"
 
 
 class DataStorageByInteger(DataStorage[int]):
@@ -229,7 +229,7 @@ class DataStorageByInteger(DataStorage[int]):
 
 		if self.kind is DataStorageKind.Stream and self.id in STREAM_IDS.values():
 			return list(STREAM_IDS.keys())[self.id + 1]
-		return f'{self.kind.name}[{self.id}]'
+		return f"{self.kind.name}[{self.id}]"
 
 
 class DataStorageByIdentifier(DataStorage[str]):
@@ -238,7 +238,7 @@ class DataStorageByIdentifier(DataStorage[str]):
 		Get the name of the data storage that represents its ID by an identifier, such as memory slots.
 		"""
 
-		return f'{self.kind.name}[{self.id}]'
+		return f"{self.kind.name}[{self.id}]"
 
 
 data_storage_map: dict[InternalType[Any], type[DataStorage[Any]]] = {
@@ -256,7 +256,7 @@ def get_data_storage_type(itype: InternalType[T]) -> type[DataStorage[T]]:
 
 
 class MacroKind(MapLikeEnum):
-	Debug = 'd'
+	Debug = "d"
 
 
 class ModeType(MapLikeEnum):
@@ -264,8 +264,8 @@ class ModeType(MapLikeEnum):
 	Mode type for Assign mode.
 	"""
 
-	String = 's'
-	Literal = 'l'
+	String = "s"
+	Literal = "l"
 
 
 class Mode(Enum):
@@ -276,7 +276,7 @@ class Mode(Enum):
 
 # End user modes (i.e. `^mode` syntax)
 CARET_MODES = {
-	'n': Mode.Normal,
+	"n": Mode.Normal,
 	**{akchar: Mode.Assign for akchar in ModeType.values()},
 }
 
@@ -296,7 +296,7 @@ class BufferMap(dict[KT, StringIO], ABC):
 		"""
 
 		if id in self.keys():
-			raise ValueError(f'stream {id} already exists')
+			raise ValueError(f"stream {id} already exists")
 
 		self[id] = StringIO()
 		return id
@@ -309,7 +309,7 @@ class BufferMap(dict[KT, StringIO], ABC):
 		stream = self.get(id)
 
 		if stream is None:
-			raise ValueError(f'{id}: no stream')
+			raise ValueError(f"{id}: no stream")
 
 		self[id] = StringIO()
 
@@ -466,7 +466,7 @@ class ParsingState:
 		Return whether it should enter character escape mode.
 		"""
 
-		return not self.char_escaping and char == '\\' and self.mode is Mode.Assign
+		return not self.char_escaping and char == "\\" and self.mode is Mode.Assign
 
 	# *- OTHER ABSTRACTIONS -* #
 
@@ -548,5 +548,5 @@ def escape_literal(literal: str) -> str:
 	escaped = literal
 	for key, value in ESCAPABLE_CHARS.items():
 		if key != value:
-			escaped = escaped.replace(value, f'\\{key}')
+			escaped = escaped.replace(value, f"\\{key}")
 	return escaped

@@ -31,11 +31,11 @@ def E001(file: FileHandler, state: CompilerState) -> Error:
 	selector_type = state.get_target_kind_type()
 	received_value = state.read_buffer()
 
-	message = f'invalid {selector_type.name}'
-	summary = f'{message} {received_value!r}'
+	message = f"invalid {selector_type.name}"
+	summary = f"{message} {received_value!r}"
 	error_line = ErrorLine(*file.freeze_position(state.mode_spos + 1), message)
 
-	return Error('E001', summary, file.name, error_line)
+	return Error("E001", summary, file.name, error_line)
 
 
 # E002: invalid literal
@@ -51,11 +51,11 @@ def E002(file: FileHandler, state: CompilerState) -> Error:
 	"""
 	received_value = state.read_buffer()
 
-	message = 'invalid literal'
-	summary = f'{message} {received_value!r}'
+	message = "invalid literal"
+	summary = f"{message} {received_value!r}"
 	error_line = ErrorLine(*file.freeze_position(state.mode_spos), message)
 
-	return Error('E002', summary, file.name, error_line)
+	return Error("E002", summary, file.name, error_line)
 
 
 # E003: mismatched types
@@ -80,12 +80,12 @@ def E003(file: FileHandler, state: CompilerState) -> Error:
 	found_type = type(received_value)
 	expected_type = target_typedef.type
 
-	message = f'expected `{expected_type.__name__}`, found {found_type.__name__}'
-	summary = 'mismatched types'
+	message = f"expected `{expected_type.__name__}`, found {found_type.__name__}"
+	summary = "mismatched types"
 	error_line = ErrorLine(*file.freeze_position(state.mode_spos), message)
 	info_lines = _E003_info_gen(file, target_typedef)
 
-	return Error('E003', summary, file.name, error_line, info_lines)
+	return Error("E003", summary, file.name, error_line, info_lines)
 
 
 def _E003_info_gen(file: FileHandler, typedef: TypeDef) -> list[InfoLine]:
@@ -96,7 +96,7 @@ def _E003_info_gen(file: FileHandler, typedef: TypeDef) -> list[InfoLine]:
 		InfoLine(
 			file.get_line(typedef.line_number - 1),
 			*typedef.data,
-			f'was defined here as {typedef.type.__name__}',
+			f"was defined here as {typedef.type.__name__}",
 		),
 	]
 
@@ -116,12 +116,12 @@ def E004(file: FileHandler, state: CompilerState) -> Error:
 
 	guess_expected = _E004_guess_expected(file, state)
 
-	message = f'expected {guess_expected} here' if guess_expected else 'here'
-	summary = 'unexpected end of line'
+	message = f"expected {guess_expected} here" if guess_expected else "here"
+	summary = "unexpected end of line"
 	lc, ln, sp, ep = file.freeze_position(file.pos)
 	error_line = ErrorLine(lc, ln, sp, ep + 1, message)
 
-	return Error('E004', summary, file.name, error_line)
+	return Error("E004", summary, file.name, error_line)
 
 
 def _E004_guess_expected(file: FileHandler, state: CompilerState) -> str | None:
@@ -129,9 +129,9 @@ def _E004_guess_expected(file: FileHandler, state: CompilerState) -> str | None:
 	file.pos -= 1  # avoids IndexError due to EOL
 
 	if program_mode_request(file, state):
-		guess = 'mode character'
+		guess = "mode character"
 	elif macro_mode_request(file, state):
-		guess = 'macro character'
+		guess = "macro character"
 	elif state.mode is Mode.Select:
 		guess = state.get_target_kind_type().name
 	elif state.mode is Mode.Assign:
@@ -158,14 +158,14 @@ def E005(file: FileHandler, state: CompilerState) -> Error:
 
 	symbol = file.current_char
 
-	message = 'invalid mode'
-	summary = f'{message} {symbol!r}'
+	message = "invalid mode"
+	summary = f"{message} {symbol!r}"
 	error_line = ErrorLine(*file.freeze_position(state.mode_spos), message)
-	hint = 'try using one of the following candidates:'
+	hint = "try using one of the following candidates:"
 	candidates = _E005_get_candidates()
 
 	return Error(
-		'E005',
+		"E005",
 		summary,
 		file.name,
 		error_line,
@@ -175,7 +175,7 @@ def E005(file: FileHandler, state: CompilerState) -> Error:
 
 
 def _E005_get_candidates() -> list[str]:
-	return [f'`^{c}' for c in CARET_MODES.keys()]
+	return [f"`^{c}" for c in CARET_MODES.keys()]
 
 
 # E006: undefined macro
@@ -192,14 +192,14 @@ def E006(file: FileHandler, state: CompilerState) -> Error:
 
 	symbol = file.current_char
 
-	message = 'this macro is undefined'
-	summary = f'macro `?{symbol}` is undefined'
+	message = "this macro is undefined"
+	summary = f"macro `?{symbol}` is undefined"
 	error_line = ErrorLine(*file.freeze_position(state.mode_spos), message)
-	hint = 'try using one of the following candidates:'
+	hint = "try using one of the following candidates:"
 	candidates = _E006_get_candidates()
 
 	return Error(
-		'E006',
+		"E006",
 		summary,
 		file.name,
 		error_line,
@@ -209,7 +209,7 @@ def E006(file: FileHandler, state: CompilerState) -> Error:
 
 
 def _E006_get_candidates() -> list[str]:
-	return [f'`?{c}`' for c in MacroKind.values()]
+	return [f"`?{c}`" for c in MacroKind.values()]
 
 
 # E007: invalid escape sequence
@@ -224,12 +224,12 @@ def E007(file: FileHandler, _: CompilerState) -> Error:
 	`\\p` is not a valid escape sequence.
 	"""
 
-	message = 'invalid escape sequence'
+	message = "invalid escape sequence"
 	summary = f"{message} '\\{file.current_char}'"
 	lc, ln, sp, ep = file.freeze_position(file.pos - 1)
 	error_line = ErrorLine(lc, ln, sp, ep + 1, message)
 
-	return Error('E007', summary, file.name, error_line)
+	return Error("E007", summary, file.name, error_line)
 
 
 # E008: unknown symbol
@@ -247,13 +247,13 @@ def E008(file: FileHandler, _: CompilerState) -> Error:
 	symbol = file.current_char
 	similar_symbol = _E008_get_similar_sym(symbol)
 
-	message = 'unknown symbol'
-	summary = f'{message} {symbol!r}'
+	message = "unknown symbol"
+	summary = f"{message} {symbol!r}"
 	lc, ln, sp, ep = file.freeze_position(file.pos)
 	error_line = ErrorLine(lc, ln, sp, ep + 1, message)
-	hint = None if similar_symbol is None else f'did you mean `{similar_symbol}`?'
+	hint = None if similar_symbol is None else f"did you mean `{similar_symbol}`?"
 
-	return Error('E008', summary, file.name, error_line, hint_message=hint)
+	return Error("E008", summary, file.name, error_line, hint_message=hint)
 
 
 def _E008_get_similar_sym(char: str) -> str | None:
@@ -277,12 +277,12 @@ def E009(file: FileHandler, state: CompilerState) -> Error:
 	expected = get_pseudo_mnemonic_no_E008(symbol).get_identifier_number()
 	received = _E009_get_received_args_number(state, expected)
 
-	message = 'unmatching number of parameters'
-	summary = f'{message} for {symbol!r}: expected {expected} but got {received}'
+	message = "unmatching number of parameters"
+	summary = f"{message} for {symbol!r}: expected {expected} but got {received}"
 	lc, ln, sp, ep = file.freeze_position(file.pos)
 	error_line = ErrorLine(lc, ln, sp, ep + 1, message)
 
-	return Error('E009', summary, file.name, error_line)
+	return Error("E009", summary, file.name, error_line)
 
 
 def _E009_get_received_args_number(
@@ -313,22 +313,22 @@ def E010(file: FileHandler, state: CompilerState) -> Error:
 	args_types = get_args_types_no_E009(state, symbol)
 	args_types_str = _E010_pretty_args_types(args_types)
 
-	message = f'no overload for {args_types_str}'
-	summary = f'no overload for `{symbol}` with {args_types_str}'
+	message = f"no overload for {args_types_str}"
+	summary = f"no overload for `{symbol}` with {args_types_str}"
 	lc, ln, sp, ep = file.freeze_position(file.pos)
 	error_line = ErrorLine(lc, ln, sp, ep + 1, message)
 
-	return Error('E010', summary, file.name, error_line)
+	return Error("E010", summary, file.name, error_line)
 
 
 def _E010_pretty_args_types(args_types: tuple[type, *tuple[type, ...]]) -> str:
 	*except_last, last = args_types
 
 	if not except_last:
-		return f'`{last.__name__}`'
+		return f"`{last.__name__}`"
 
 	return (
-		', '.join(map(lambda t: f'`{t.__name__}`', except_last)) + f' and `{last.__name__}`'
+		", ".join(map(lambda t: f"`{t.__name__}`", except_last)) + f" and `{last.__name__}`"
 	)
 
 
@@ -346,8 +346,8 @@ def E011(file: FileHandler, state: CompilerState) -> Error:
 
 	undefined_identifier = get_buffer_eval_no_E002(state)
 
-	message = 'undefined identifier'
-	summary = f'undefined identifier `{undefined_identifier}`'
+	message = "undefined identifier"
+	summary = f"undefined identifier `{undefined_identifier}`"
 	error_line = ErrorLine(*file.freeze_position(state.mode_spos), message)
 
-	return Error('E011', summary, file.name, error_line)
+	return Error("E011", summary, file.name, error_line)

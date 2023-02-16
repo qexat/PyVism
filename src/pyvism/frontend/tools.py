@@ -5,7 +5,7 @@ from typing import TypeVar
 
 from pyvism.backend.tools import IRI
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class TargetFrontEnd(Generic[T]):

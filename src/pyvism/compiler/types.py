@@ -9,7 +9,7 @@ class UnsetTypeMeta(type):
 
 class UnsetType(metaclass=UnsetTypeMeta):
 	def __repr__(self) -> str:
-		return '<Unset>'
+		return "<Unset>"
 
 
 MemoryValue = (

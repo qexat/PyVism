@@ -32,33 +32,33 @@ class MapLikeEnum(Enum):
 
 
 def bold(s: str) -> str:
-	return f'\x1b[1m{s}\x1b[22m'
+	return f"\x1b[1m{s}\x1b[22m"
 
 
 def light(s: str) -> str:
-	return f'\x1b[2m{s}\x1b[22m'
+	return f"\x1b[2m{s}\x1b[22m"
 
 
 def color(s: str, c: int) -> str:
-	return f'\x1b[3{c}m{s}\x1b[39m'
+	return f"\x1b[3{c}m{s}\x1b[39m"
 
 
 def color_rgb(s: str, c: tuple[int, int, int]) -> str:
 	r, g, b = c
-	return f'\x1b[38;2;{r};{g};{b}m{s}\x1b[39m'
+	return f"\x1b[38;2;{r};{g};{b}m{s}\x1b[39m"
 
 
 def read_file_lines(path: str) -> list[str]:
 	if not os.path.exists(path):
 		return []
-	return open(path, 'r').read().splitlines()
+	return open(path, "r").read().splitlines()
 
 
 def write_file_lines(path: str, lines: list[str]) -> None:
 	if not os.path.exists((file_dir := os.path.dirname(path))):
 		os.makedirs(file_dir)
 
-	with open(path, 'w+') as f:
+	with open(path, "w+") as f:
 		for line in lines:
 			f.write(line + os.linesep)
 
@@ -69,7 +69,7 @@ def write_out(string: str) -> None:
 
 def unwrite_out(number: int) -> None:
 	for _ in range(number):
-		write_out('\b \b')
+		write_out("\b \b")
 
 
 def write_out_new_line() -> None:
@@ -77,7 +77,7 @@ def write_out_new_line() -> None:
 
 
 def ring_bell() -> None:
-	write_out('\a')
+	write_out("\a")
 
 
 def ends_with_new_line(string: str) -> bool:
@@ -110,7 +110,7 @@ def get_key() -> str | MagicKey:
 			key = ord(byteseq)
 		else:
 			key = ord(byteseq[-1])
-			is_escaping = byteseq[:-1] == '\x1b['
+			is_escaping = byteseq[:-1] == "\x1b["
 		return MagicKey.get((is_escaping, key), chr(key))
 	finally:
 		termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_state)

@@ -39,7 +39,7 @@ from result import Ok
 from result import Result
 
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 # *- Compiler -* #
@@ -98,7 +98,7 @@ class Compiler:
 						pass
 					case Err(undef_target_exc):
 						if undef_target_exc:  # !UNREACHABLE
-							raise RuntimeError('undefined target id')
+							raise RuntimeError("undefined target id")
 						self.push_error(E002)  # E002: invalid literal
 						return
 

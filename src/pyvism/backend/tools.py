@@ -11,22 +11,22 @@ from typing import TypeVarTuple
 from pyvism.compiler.types import MemoryValue
 from pyvism.compiler.types import UnsetType
 
-OP_SYMBOL = TypeVar('OP_SYMBOL', bound=LiteralString)
-OP_NAME = TypeVar('OP_NAME', bound=LiteralString)
-SIM_OP_NAME = TypeVar('SIM_OP_NAME', bound=LiteralString)
+OP_SYMBOL = TypeVar("OP_SYMBOL", bound=LiteralString)
+OP_NAME = TypeVar("OP_NAME", bound=LiteralString)
+SIM_OP_NAME = TypeVar("SIM_OP_NAME", bound=LiteralString)
 
 # The utensils for a certain amount of type tomfoolery
-Ts = TypeVarTuple('Ts')
-T_Dest = TypeVar('T_Dest')
-T1 = TypeVar('T1')
-T2 = TypeVar('T2')
-T3 = TypeVar('T3')
+Ts = TypeVarTuple("Ts")
+T_Dest = TypeVar("T_Dest")
+T1 = TypeVar("T1")
+T2 = TypeVar("T2")
+T3 = TypeVar("T3")
 
 
 class IRI(Generic[OP_NAME]):
 	def __init__(
 		self,
-		mnemonic: 'IRMnemonic[OP_NAME, Any, *tuple[Any, ...]]',
+		mnemonic: "IRMnemonic[OP_NAME, Any, *tuple[Any, ...]]",
 		dest: Any,
 		dest_type: type,
 		args: tuple[Any, ...],
@@ -39,9 +39,9 @@ class IRI(Generic[OP_NAME]):
 		self.args_types = args_types
 
 	def __repr__(self) -> str:
-		operands = f'{self.dest}, ' if self.dest is not None else ''
-		operands += ', '.join(map(str, self.args))
-		return f'{self.mnemonic.name} {operands}'
+		operands = f"{self.dest}, " if self.dest is not None else ""
+		operands += ", ".join(map(str, self.args))
+		return f"{self.mnemonic.name} {operands}"
 
 
 class IRMnemonic(Generic[OP_NAME, T_Dest, *Ts]):
@@ -50,8 +50,8 @@ class IRMnemonic(Generic[OP_NAME, T_Dest, *Ts]):
 	def __init__(self, name: OP_NAME, psi: Callable[[*Ts], T_Dest]) -> None:
 		self.name = name
 		self.__psi = psi
-		_dest_kind: type[T_Dest] = psi.__annotations__['return']
-		_args_kinds: tuple[*Ts] = tuple(kind for k, kind in psi.__annotations__.items() if k != 'return')  # type: ignore
+		_dest_kind: type[T_Dest] = psi.__annotations__["return"]
+		_args_kinds: tuple[*Ts] = tuple(kind for k, kind in psi.__annotations__.items() if k != "return")  # type: ignore
 		self.dest_kind = _dest_kind
 		self.args_kinds = _args_kinds
 		self.nb_ident_args = len(
@@ -62,7 +62,7 @@ class IRMnemonic(Generic[OP_NAME, T_Dest, *Ts]):
 
 	@overload
 	def __call__(
-		self: 'IRMnemonic[OP_NAME, T_Dest, T1]',
+		self: "IRMnemonic[OP_NAME, T_Dest, T1]",
 		dest: T_Dest,
 		dest_type: type,
 		args: tuple[T1],
@@ -72,7 +72,7 @@ class IRMnemonic(Generic[OP_NAME, T_Dest, *Ts]):
 
 	@overload
 	def __call__(
-		self: 'IRMnemonic[OP_NAME, T_Dest, T1, T2]',
+		self: "IRMnemonic[OP_NAME, T_Dest, T1, T2]",
 		dest: T_Dest,
 		dest_type: type,
 		args: tuple[T1, T2],
@@ -82,7 +82,7 @@ class IRMnemonic(Generic[OP_NAME, T_Dest, *Ts]):
 
 	@overload
 	def __call__(
-		self: 'IRMnemonic[OP_NAME, T_Dest, T1, T2, T3]',
+		self: "IRMnemonic[OP_NAME, T_Dest, T1, T2, T3]",
 		dest: T_Dest,
 		dest_type: type,
 		args: tuple[T1, T2, T3],
@@ -102,13 +102,13 @@ class IRMnemonic(Generic[OP_NAME, T_Dest, *Ts]):
 	def __hash__(self) -> int:
 		return hash(self.name)
 
-	def __eq__(self, other: 'AnyIRMnemonic') -> bool:
+	def __eq__(self, other: "AnyIRMnemonic") -> bool:
 		return self.name == other.name
 
-	def untyped_copy(self) -> 'IRMnemonic[OP_NAME, Any, *tuple[Any, ...]]':
+	def untyped_copy(self) -> "IRMnemonic[OP_NAME, Any, *tuple[Any, ...]]":
 		return IRMnemonic(self.name, self.__psi)  # type: ignore
 
-	def similar(self, copy_name: SIM_OP_NAME) -> 'IRMnemonic[SIM_OP_NAME, T_Dest, *Ts]':
+	def similar(self, copy_name: SIM_OP_NAME) -> "IRMnemonic[SIM_OP_NAME, T_Dest, *Ts]":
 		return IRMnemonic(copy_name, self.__psi)
 
 
@@ -149,7 +149,8 @@ class PseudoMnemonic(Generic[OP_SYMBOL, T_Dest, *Ts]):
 		self,
 		symbol: OP_SYMBOL,
 		overloads: dict[
-			IRMnemonic[LiteralString, T_Dest, *Ts], list[tuple[type | UnionType, ...]],
+			IRMnemonic[LiteralString, T_Dest, *Ts],
+			list[tuple[type | UnionType, ...]],
 		],
 	) -> None:
 		self.__symbol = symbol

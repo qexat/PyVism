@@ -22,7 +22,7 @@ from pyvism.compiler.types import UnsetType
 
 pseudo_mnemonics: list[PseudoMnemonic[LiteralString, Any, *tuple[Any, ...]]] = [
 	PseudoMnemonic(
-		'+',
+		"+",
 		{
 			ADD: [
 				(int, int, int),
@@ -53,7 +53,7 @@ pseudo_mnemonics: list[PseudoMnemonic[LiteralString, Any, *tuple[Any, ...]]] = [
 		},
 	),
 	PseudoMnemonic(
-		'-',
+		"-",
 		{
 			SUB: [
 				(int, int, int),
@@ -84,7 +84,7 @@ pseudo_mnemonics: list[PseudoMnemonic[LiteralString, Any, *tuple[Any, ...]]] = [
 		},
 	),
 	PseudoMnemonic(
-		'×',
+		"×",
 		{
 			MUL: [
 				(int, int, int),
@@ -124,7 +124,7 @@ pseudo_mnemonics: list[PseudoMnemonic[LiteralString, Any, *tuple[Any, ...]]] = [
 		},
 	),
 	PseudoMnemonic(
-		'/',
+		"/",
 		{
 			INTDIV: [
 				(int, int, int),
@@ -138,7 +138,7 @@ pseudo_mnemonics: list[PseudoMnemonic[LiteralString, Any, *tuple[Any, ...]]] = [
 		},
 	),
 	PseudoMnemonic(
-		'%',
+		"%",
 		{
 			MODULO: [
 				(int, int, int),
@@ -149,7 +149,7 @@ pseudo_mnemonics: list[PseudoMnemonic[LiteralString, Any, *tuple[Any, ...]]] = [
 		},
 	),
 	PseudoMnemonic(
-		'÷',
+		"÷",
 		{
 			DIVMOD: [
 				(tuple[int, int], int, int),
@@ -160,7 +160,7 @@ pseudo_mnemonics: list[PseudoMnemonic[LiteralString, Any, *tuple[Any, ...]]] = [
 		},
 	),
 	PseudoMnemonic(
-		'p',
+		"p",
 		{
 			PRINTV: [
 				(
@@ -171,7 +171,7 @@ pseudo_mnemonics: list[PseudoMnemonic[LiteralString, Any, *tuple[Any, ...]]] = [
 		},
 	),
 	PseudoMnemonic(
-		'w',
+		"w",
 		{
 			SWRITE: [
 				(int, str),
@@ -179,7 +179,7 @@ pseudo_mnemonics: list[PseudoMnemonic[LiteralString, Any, *tuple[Any, ...]]] = [
 		},
 	),
 	PseudoMnemonic(
-		'f',
+		"f",
 		{
 			SFLUSH: [
 				(int,),
