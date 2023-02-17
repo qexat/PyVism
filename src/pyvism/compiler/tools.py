@@ -1,3 +1,6 @@
+"""
+Base tools for the compiler. Type definition tracker, compilation FSM and few predicates.
+"""
 import sys
 from abc import ABC
 from collections import defaultdict
@@ -223,6 +226,11 @@ def is_matching_number_of_operands(
 
 
 def is_identifier_defined(typedef: TypeDef) -> TypeGuard[PosTypeDef]:
+	"""
+	Determine if an identifier was defined.
+	To do so, we simply check if its type definition has file coordinates registered.
+	"""
+
 	return isinstance(typedef, PosTypeDef)
 
 

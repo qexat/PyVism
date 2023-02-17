@@ -1,3 +1,6 @@
+"""
+Tools to define Intermediate Representation Instructions.
+"""
 from collections.abc import Callable
 from types import UnionType
 from typing import Any

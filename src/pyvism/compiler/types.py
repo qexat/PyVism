@@ -1,3 +1,6 @@
+"""
+Vism built-in types.
+"""
 from typing import Any
 from typing import Literal
 

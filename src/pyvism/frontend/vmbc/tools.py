@@ -1,3 +1,6 @@
+"""
+Tools to build VM ByteCode instructions.
+"""
 import inspect
 import sys
 from collections.abc import Callable

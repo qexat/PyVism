@@ -1,3 +1,6 @@
+"""
+Interface for front-ends to easily deal with IR.
+"""
 from typing import Any
 from typing import LiteralString
 

@@ -9,6 +9,10 @@ from result import Ok
 
 
 def run(file: TextIO) -> int:
+	"""
+	Convenient function to run a Vism file.
+	"""
+
 	vm = VM()
 
 	match compile(file, CompilationTarget.Bytecode):

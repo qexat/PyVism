@@ -1,3 +1,6 @@
+"""
+The compiler class, and a handy function to directly compile a file to a target.
+"""
 from collections.abc import Callable
 from typing import Any
 from typing import TextIO
@@ -78,11 +81,12 @@ class Compiler:
 		- E001: if the selector type is invalid
 		- E002: if the buffered literal to assign did not pass evaluation
 		- E003: if the type of the assignment target does not match with value's one
+		- E011: if the identifier to point to with the register is not defined
 
 		Unreachable exceptions:
 		- Assignment: the target id is not defined
 
-		Note: the latter exist in the case where there is a bug, to make it easier to track.
+		Note: the latter exists in the case where there is a bug, to make it easier to track.
 		"""
 
 		mode_buffer = self.state.read_buffer()
