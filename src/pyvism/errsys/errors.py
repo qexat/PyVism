@@ -1,5 +1,4 @@
 from pyvism.compiler.tools import CompilerState
-from pyvism.compiler.tools import FileHandler
 from pyvism.compiler.tools import PosTypeDef
 from pyvism.compiler.tools import TypeDef
 from pyvism.constants import confusable_symbols
@@ -10,6 +9,7 @@ from pyvism.errsys.tricks import get_args_types_no_E009
 from pyvism.errsys.tricks import get_buffer_eval_no_E002
 from pyvism.errsys.tricks import get_pseudo_mnemonic_no_E008
 from pyvism.parser.tools import CARET_MODES
+from pyvism.parser.tools import FileHandler
 from pyvism.parser.tools import macro_mode_request
 from pyvism.parser.tools import MacroKind
 from pyvism.parser.tools import Mode
