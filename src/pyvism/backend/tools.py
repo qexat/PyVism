@@ -133,15 +133,6 @@ class PseudoMnemonic(Generic[OP_SYMBOL, T_Dest, *Ts]):
 	def overloads(self):
 		return self.__overloads
 
-	@property
-	def operand_number(self) -> int:
-		# The `1` is for dest_kind
-		return 1 + len(self.args_kinds)
-
-	@property
-	def memory_only(self) -> bool:
-		return all(kind is IdentifierLike for kind in self.kinds)
-
 	def get_identifier_number(self) -> int:
 		return len([kind for kind in self.kinds if kind is IdentifierLike])
 

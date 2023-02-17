@@ -4,6 +4,7 @@ REPL for POSIX-based systems.
 """
 from io import StringIO
 
+from pyvism.constants import CMD_MODE_CHAR
 from pyvism.constants import REPL_HISTORY_FILE
 from pyvism.errsys.tools import report_panic
 from pyvism.py_utils import color
@@ -155,7 +156,7 @@ class REPL(BaseREPL):
 						self.is_command_mode = False
 						write_out("\b \b\x1b[39m")
 				case char:
-					if char == "!" and self.pos == 0:
+					if char == CMD_MODE_CHAR and self.pos == 0:
 						self.is_command_mode = not self.is_command_mode
 						if self.is_command_mode:
 							write_out("\x1b[35m!")

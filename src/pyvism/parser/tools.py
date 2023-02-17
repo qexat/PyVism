@@ -329,9 +329,6 @@ class ModeBufferMap(BufferMap[Mode]):
 
 		return buffer_map
 
-	def get_buffer(self, mode: Mode) -> StringIO:
-		return self[mode]
-
 
 class ParsingState:
 	"""

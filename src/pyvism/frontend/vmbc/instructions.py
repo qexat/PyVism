@@ -45,7 +45,7 @@ def flush(vms: VMState, fd: int) -> VMState:
 
 
 @mnemonic
-def print(vms: VMState, _, memsrc1: str) -> VMState:
+def print(vms: VMState, _: Any, memsrc1: str) -> VMState:
 	value = vms.memory[memsrc1]
 
 	if value is not None:
