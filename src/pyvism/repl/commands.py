@@ -1,3 +1,6 @@
+"""
+Command system used across the REPL variants.
+"""
 from collections.abc import Callable
 
 from pyvism.constants import __version__

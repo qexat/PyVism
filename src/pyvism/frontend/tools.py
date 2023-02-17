@@ -1,9 +1,13 @@
+"""
+Tools to build front-end objects.
+"""
 from collections.abc import Callable
 from typing import Generic
 from typing import LiteralString
 from typing import TypeVar
 
 from pyvism.backend.tools import IRI
+
 
 T = TypeVar("T")
 

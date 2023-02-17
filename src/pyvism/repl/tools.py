@@ -1,3 +1,6 @@
+"""
+Tools to build the REPL variants.
+"""
 from abc import ABC
 from abc import abstractmethod
 from io import StringIO
@@ -21,7 +24,10 @@ from result import Ok
 
 class BaseREPL(ABC):
 	def __init__(
-		self, synopsis: str = REPL_SYNOPSIS, prompt: str = REPL_PROMPT, **kwargs: bool,
+		self,
+		synopsis: str = REPL_SYNOPSIS,
+		prompt: str = REPL_PROMPT,
+		**kwargs: bool,
 	) -> None:
 		print(synopsis)
 		self.prompt = prompt

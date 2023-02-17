@@ -1,3 +1,6 @@
+"""
+Utilitaries and classes for the error system.
+"""
 import os
 import sys
 from dataclasses import dataclass
@@ -28,6 +31,10 @@ class MessageLine:
 		return len(str(self.number)) + 1
 
 	def get_line(self) -> str:
+		"""
+		Return a colorful human-readable representation of the related code line.
+		"""
+
 		return (
 			"\x1b[34m"
 			+ f"{self.number} | "
@@ -40,6 +47,11 @@ class MessageLine:
 		)
 
 	def get_subline(self) -> str:
+		"""
+		Return a colorful human-readable representation of the subline, that underlines the exact
+		topic position and details the message.
+		"""
+
 		return (
 			" " * self._ruler_size
 			+ "\x1b[34m| \x1b[39m"
@@ -66,6 +78,11 @@ class ErrorLine(MessageLine):
 
 @dataclass
 class Error:
+	"""
+	Represents a compilation error.
+	Embeds a lot of handy methods to easily print a nice error message.
+	"""
+
 	id: str
 
 	summary: str
@@ -97,19 +114,35 @@ class Error:
 
 	@property
 	def synopsis(self) -> str:
+		"""
+		The synopsis is the error code followed by a summary of the issue, with fancy text decorations.
+		"""
+
 		return bold(f"[{self.name}]: {self.summary}")
 
 	@property
 	def source(self) -> str:
+		"""
+		The source is the path of the file where the error comes from, with fancy text decorations.
+		"""
+
 		arrow = color(self._get_ruler_space(minus_one=True) + "-->", 4)
 		path = f"{self.source_file}:{self.error_line.number}:{self.error_line.spos+1}"
 		return f"{arrow} {path}"
 
 	@property
 	def lines(self) -> list[MessageLine]:
+		"""
+		The lines are a list of the fancy-wrapped code lines sorted by their number.
+		"""
+
 		return sorted([*self.info_lines, self.error_line], key=lambda line: line.number)
 
 	def _help_line(self, message: str, *, indent: bool = False) -> str:
+		"""
+		Util to get a pretty help message line.
+		"""
+
 		bullet = color(self._get_ruler_space() + "=", 4)
 		base = f"{bullet} {bold('help:')} "
 		return f"{base}{'  ' * indent}{message}"
@@ -125,6 +158,10 @@ class Error:
 		return [self._help_line(msg) for msg in self.candidate_messages]
 
 	def throw(self, *, verbose: bool = True) -> None:
+		"""
+		Print the error to stderr.
+		"""
+
 		err_write(self.synopsis)
 
 		if verbose:
@@ -144,13 +181,30 @@ class Error:
 
 
 def err_write(s: str = "") -> None:
+	"""
+	Convenient function to print stuff to stderr.
+	"""
+
 	print(s, file=stderr)
 
 
 def report_abortion() -> None:
+	"""
+	Report in the stderr that since there were errors, the program aborted.
+
+	Similar to `report_panic()`, but for Vism compilation errors.
+	"""
+
 	err_write(bold(color("error", 1) + ": aborting due to previous error"))
 
 
 def report_panic(reason: Exception) -> None:
+	"""
+	Report in the stderr that since there was an internal error (= uncaught Python exception),
+	the program panicked and stopped.
+
+	Similar to `report_abortion()`, but for internal Python exceptions.
+	"""
+
 	message = f"[Error] Internal process panicked for the following reasons: '{reason}'"
-	print(bold(color(message, 1)))
+	err_write(bold(color(message, 1)))

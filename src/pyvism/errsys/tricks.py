@@ -1,3 +1,6 @@
+"""
+Tricks to get values and skipping usual checks.
+"""
 from typing import Any
 from typing import LiteralString
 

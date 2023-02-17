@@ -1,3 +1,6 @@
+"""
+Platform independant interface to PyVism REPL.
+"""
 import os
 
 from pyvism.constants import REPL_HISTORY_FILE

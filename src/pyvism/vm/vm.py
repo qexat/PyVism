@@ -1,5 +1,9 @@
+"""
+PyVism Virtual Machine.
+"""
 import contextlib
 import sys
+from os import linesep
 from typing import TextIO
 
 from pyvism.frontend.vmbc.tools import AnyInstruction
@@ -25,10 +29,10 @@ class VM:
 					self.state = instr.run(self.state)
 				except Exception as e:
 					print(
-						f'\x1b[1;31mRuntime exception:',
-						f'  {type(e).__name__}: {e}',
-						f'\n[Illegal operation]\x1b[22;39m',
-						sep='\n',
+						f"\x1b[1;31mRuntime exception:",
+						f"  {type(e).__name__}: {e}",
+						f"{linesep}[Illegal operation]\x1b[22;39m",
+						sep=linesep,
 						file=sys.stderr,
 					)
 					if self.strict_mode:

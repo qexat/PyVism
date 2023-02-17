@@ -1,3 +1,18 @@
+"""
+Command Line Interface of PyVism.
+
+## REPL
+
+```sh
+vism
+```
+
+## Run a Vism file
+
+```sh
+vism run /path/to/file.vism
+```
+"""
 from argparse import ArgumentParser
 from argparse import FileType
 from argparse import Namespace

@@ -1,3 +1,6 @@
+"""
+Here are defined all the compilation errors that could be thrown, and few helpers for some.
+"""
 from pyvism.compiler.tools import CompilerState
 from pyvism.compiler.tools import PosTypeDef
 from pyvism.compiler.tools import TypeDef

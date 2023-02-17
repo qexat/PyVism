@@ -1,3 +1,6 @@
+"""
+Parsing tools.
+"""
 from abc import ABC
 from abc import abstractmethod
 from ast import literal_eval

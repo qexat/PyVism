@@ -1,3 +1,6 @@
+"""
+VM ByteCode instructions.
+"""
 from builtins import divmod as _divmod
 from typing import Any
 from typing import TextIO
