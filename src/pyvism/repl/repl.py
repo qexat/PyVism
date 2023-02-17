@@ -40,7 +40,7 @@ def start(**kwargs: bool) -> int:
 	try:
 		r.start()
 	except Exception as e:
-		if not isinstance(e, (KeyboardInterrupt, SystemExit)):
+		if not isinstance(e, (EOFError, KeyboardInterrupt, SystemExit)):
 			report_panic(e)
 			exit_code = 1
 			exc = e

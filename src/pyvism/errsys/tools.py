@@ -82,6 +82,7 @@ class Error:
 		self.source_file = os.path.abspath(os.path.join(os.getcwd(), self.source_file))
 
 	def _get_ruler_size(self) -> int:
+		# See: #34
 		return len(str(max(line.number for line in [*self.info_lines, self.error_line]))) + 1  # type: ignore
 
 	def _get_ruler_space(self, *, minus_one: bool = False) -> str:
