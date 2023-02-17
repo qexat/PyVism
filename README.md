@@ -27,7 +27,7 @@ pip install -e .
 python3.11 -m src.pyvism
 ```
 
-POSIX systems benefit from a better REPL, with a lot of fancy features.
+POSIX systems enjoy a better REPL, with a lot of fancy features.
 If you still want to start the universal version, use the `--force-universal` flag.
 
 ### Run a file
