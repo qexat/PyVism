@@ -8,8 +8,6 @@ from pyvism.backend.instructions import SWRITE
 from pyvism.backend.interface import get_pseudo_mnemonic
 from pyvism.compiler.macros import macro_map
 from pyvism.compiler.tools import CompilerState
-from pyvism.compiler.tools import DataStorageKind
-from pyvism.compiler.tools import FileHandler
 from pyvism.compiler.tools import is_identifier_defined
 from pyvism.compiler.tools import is_matching_number_of_operands
 from pyvism.compiler.typechecking import static_type_check
@@ -28,7 +26,9 @@ from pyvism.errsys.errors import E011
 from pyvism.errsys.tools import Error
 from pyvism.frontend.map import CompilationTarget
 from pyvism.parser.tools import CARET_MODES
+from pyvism.parser.tools import DataStorageKind
 from pyvism.parser.tools import discarded_char
+from pyvism.parser.tools import FileHandler
 from pyvism.parser.tools import macro_mode_request
 from pyvism.parser.tools import MacroKind
 from pyvism.parser.tools import Mode

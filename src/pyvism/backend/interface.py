@@ -14,7 +14,6 @@ from pyvism.backend.instructions import SFLUSH
 from pyvism.backend.instructions import SUB
 from pyvism.backend.instructions import SWRITE
 from pyvism.backend.instructions import UNION
-from pyvism.backend.tools import AnyIRMnemonic
 from pyvism.backend.tools import PseudoMnemonic
 from pyvism.compiler.types import MemoryValue
 from pyvism.compiler.types import UnsetType
@@ -195,28 +194,3 @@ def get_pseudo_mnemonic(
 	symbol: str,
 ) -> PseudoMnemonic[LiteralString, Any, *tuple[Any, ...]] | None:
 	return symbol_table.get(symbol, None)
-
-
-def dispatch(
-	symbol: str,
-	*types: * tuple[type[MemoryValue], *tuple[type[MemoryValue], ...]],
-) -> AnyIRMnemonic | None:
-	"""
-	Given a symbol and the operand types, return the corresponding IR mnemonic.
-
-	**IMPORTANT ⚠️**
-
-	→ `types` order matters!
-	For example, with symbol `+`, it should be as following:
-	`destination type`, `source 1 type`, `source 2 type`
-
-	Don't use `symbol_table` directly, but this helper function instead.
-	"""
-
-	pseudo = symbol_table.get(symbol, None)
-
-	# When symbol is unknown -- this should not happen (E008)
-	if pseudo is None:
-		return None
-
-	return pseudo.get_overload(types)

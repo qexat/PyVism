@@ -1,5 +1,5 @@
 from pyvism.compiler.tools import CompilerState
-from pyvism.compiler.tools import FileHandler
+from pyvism.parser.tools import FileHandler
 from pyvism.parser.tools import MacroKind
 
 

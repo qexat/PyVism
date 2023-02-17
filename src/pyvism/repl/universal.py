@@ -3,6 +3,7 @@ Universal version of the REPL.
 """
 from io import StringIO
 
+from pyvism.constants import CMD_MODE_CHAR
 from pyvism.py_utils import write_out
 from pyvism.repl.tools import BaseREPL
 
@@ -13,7 +14,7 @@ class REPL(BaseREPL):
 
 	@property
 	def is_command_mode(self) -> bool:
-		return self.buffer.getvalue().startswith("!")
+		return self.buffer.getvalue().startswith(CMD_MODE_CHAR)
 
 	def _strip_bang(self) -> None:
 		cmd_buffer = self.buffer.getvalue()[1:]
