@@ -123,7 +123,7 @@ class REPL(BaseREPL):
 
 		while True:
 			match get_key():
-				case MagicKey.Esc:
+				case MagicKey.EOT | MagicKey.Esc:
 					write_out("\x1b[39m")
 					write_out_new_line()
 					return
