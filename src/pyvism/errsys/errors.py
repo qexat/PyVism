@@ -354,3 +354,24 @@ def E011(file: FileHandler, state: CompilerState) -> Error:
 	error_line = ErrorLine(*file.freeze_position(state.mode_spos), message)
 
 	return Error("E011", summary, file.name, error_line)
+
+
+# E012: invalid identifier
+def E012(file: FileHandler, state: CompilerState) -> Error:
+	"""
+	# E012: invalid identifier
+
+	## Example
+
+	>>> &x ^i 0_0 ^n
+
+	`0_0` is not a valid identifier.
+	"""
+
+	invalid_identifier = state.read_buffer()
+
+	message = "invalid identifier"
+	summary = f"invalid identifier `{invalid_identifier}`"
+	error_line = ErrorLine(*file.freeze_position(state.mode_spos), message)
+
+	return Error("E012", summary, file.name, error_line)
