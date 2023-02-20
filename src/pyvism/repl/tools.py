@@ -106,7 +106,7 @@ class BaseREPL(ABC):
 
 	def reset(self) -> None:
 		"""
-		Reset the REPL state to initials.
+		Reset the REPL to its initial state.
 		"""
 
 		self.buffer = StringIO()
