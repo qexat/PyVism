@@ -42,6 +42,7 @@ def flush(vms: VMState, fd: int) -> VMState:
 	endpoint = stream_endpoints[fd]
 
 	endpoint.write(stream.read())
+	stream.flush()
 	endpoint.flush()
 
 	return vms
