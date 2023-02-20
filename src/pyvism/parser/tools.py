@@ -267,7 +267,6 @@ class ModeType(MapLikeEnum):
 	Mode type for Assign mode.
 	"""
 
-	String = "s"
 	Literal = "l"
 
 
@@ -449,8 +448,6 @@ class ParsingState:
 		mode_buffer = self.read_buffer()
 
 		match self.mode_type:
-			case ModeType.String:
-				return Ok(mode_buffer)
 			case ModeType.Literal:
 				escaped_buffer = escape_literal(mode_buffer)
 				if not is_valid_literal(escaped_buffer):
