@@ -351,7 +351,7 @@ class ParsingState:
 		self.char_escaping: bool = False
 
 	def reset(self) -> None:
-		self.__init__()
+		ParsingState.__init__(self)  # we only reset PARSING state, not subclasses stuff!!
 
 	# *- MODE OPERATIONS -* #
 
