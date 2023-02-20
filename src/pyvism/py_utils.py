@@ -94,6 +94,7 @@ def ends_with_new_line(string: str) -> bool:
 
 
 class MagicKey(MapLikeEnum):
+	EOT = False, 4
 	Tab = False, 9
 	Newline = False, 10
 	BackWord = False, 23
