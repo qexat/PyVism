@@ -6,15 +6,12 @@ from io import StringIO
 
 from pyvism.constants import CMD_MODE_CHAR
 from pyvism.constants import REPL_HISTORY_FILE
-from pyvism.errsys.tools import report_panic
 from pyvism.py_utils import color
 from pyvism.py_utils import get_key
-from pyvism.py_utils import light
 from pyvism.py_utils import MagicKey
 from pyvism.py_utils import read_file_lines
 from pyvism.py_utils import ring_bell
 from pyvism.py_utils import unwrite_out
-from pyvism.py_utils import write_file_lines
 from pyvism.py_utils import write_out
 from pyvism.py_utils import write_out_new_line
 from pyvism.repl.tools import BaseREPL
@@ -164,37 +161,3 @@ class REPL(BaseREPL):
 							write_out("\b \b\x1b[39m")
 					else:
 						self.write(char)
-
-
-def start(**kwargs: bool) -> int:
-	"""
-	Convenient function to set up a REPL and start it.
-	When exiting, save the history into a file.
-	"""
-
-	RAISE_PYTHON_EXCEPTIONS = kwargs.get("raise_python_exceptions", False)
-	STORE_INVALID_INPUT = kwargs.get("store_invalid_input", False)
-
-	r = REPL(store_invalid_input=STORE_INVALID_INPUT)
-
-	exit_code = 0
-	exc: Exception | None = None
-
-	try:
-		r.start()
-	except Exception as e:
-		if not isinstance(e, (KeyboardInterrupt, SystemExit)):
-			report_panic(e)
-			exit_code = 1
-			exc = e
-	finally:
-		write_file_lines(REPL_HISTORY_FILE, list(reversed(r.history)))
-		write_out_new_line()
-		print(light(f"Saved session history in {REPL_HISTORY_FILE!r}."))
-		write_out_new_line()
-		print(color("👋️ Goodbye!", 3))
-
-		if exc is not None and RAISE_PYTHON_EXCEPTIONS:
-			raise exc
-
-		return exit_code
