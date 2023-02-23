@@ -14,7 +14,8 @@ See [CONTRIBUTING.md](./.github/CONTRIBUTING.md).
 
 ## PyVism
 
-Running `build.sh` will install PyVism and its dependencies locally.
+Running [`install.sh`](./install.sh) will install PyVism and its dependencies locally.
+⚠️ It does NOT download this repository.
 
 ### REPL
 
