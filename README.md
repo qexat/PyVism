@@ -14,17 +14,12 @@ See [CONTRIBUTING.md](./.github/CONTRIBUTING.md).
 
 ## PyVism
 
-You need to follow these steps to make it work. It is recommended to use a [virtual environment](https://virtualenv.pypa.io/en/latest/).
-
-```
-pip install -r requirements.txt
-pip install -e .
-```
+Running `build.sh` will install PyVism and its dependencies locally.
 
 ### REPL
 
 ```
-python3.11 -m src.pyvism
+vism
 ```
 
 POSIX systems enjoy a better REPL, with a lot of fancy features.
@@ -33,5 +28,5 @@ If you still want to start the universal version, use the `--force-universal` fl
 ### Run a file
 
 ```
-python3.11 -m src.pyvism run <file>
+vism run <file>
 ```
