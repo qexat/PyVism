@@ -90,8 +90,8 @@ pip install -r requirements.txt >/dev/null 2>&1
 psuccess 'Dependencies installed.'
 
 pinfo 'Installing PyVism...'
-if pip install -e . >/dev/null 2>&1; then
-	throw_error 'PyVism is not compatible with the version of Python present in the virtual environment.' 2
+if pip install -e .; then
+	throw_error 'An error occured with pip during PyVism installation.' 2
 fi
 psuccess 'PyVism installed locally.'
 
