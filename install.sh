@@ -91,7 +91,7 @@ psuccess 'Dependencies installed.'
 
 pinfo 'Installing PyVism...'
 if pip install -e .; then
-	throw_error 'An error occured with pip during PyVism installation.' 2
+	throw_error 'An error occurred with pip during PyVism installation.' 2
 fi
 psuccess 'PyVism installed locally.'
 
