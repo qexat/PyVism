@@ -90,7 +90,7 @@ pip install -r requirements.txt >/dev/null 2>&1
 psuccess 'Dependencies installed.'
 
 pinfo 'Installing PyVism...'
-if pip install -e .; then
+if ! pip install -e . > /dev/null 2>&1; then
 	throw_error 'An error occurred with pip during PyVism installation.' 2
 fi
 psuccess 'PyVism installed locally.'
