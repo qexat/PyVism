@@ -10,7 +10,11 @@ throw_error() {
 	exit "$2"
 }
 
-if ! (git clone "git@github.com:qexat/PyVism.git" || git clone "https://github.com/qexat/PyVism.git"); then
+timed_clone() {
+	timeout 10 "git clone $1"
+}
+
+if ! (timed_clone "git@github.com:qexat/PyVism.git" || timed_clone "https://github.com/qexat/PyVism.git"); then
 	throw_error "Could not fetch the repository" 1
 fi
 
