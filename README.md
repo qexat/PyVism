@@ -14,8 +14,17 @@ See [CONTRIBUTING.md](./.github/CONTRIBUTING.md).
 
 ## PyVism
 
-Running [`install.sh`](./install.sh) will install PyVism and its dependencies locally.
-⚠️ It does NOT download this repository.
+### Install locally
+
+```
+curl https://raw.githubusercontent.com/qexat/PyVism/main/download.sh | bash
+```
+
+It will clone, set up and install PyVism in a virtual environment.
+
+---
+
+You can also clone manually and run [`install.sh`](./install.sh).
 
 ### REPL
 
