@@ -21,5 +21,7 @@ fi
 cd ./PyVism/ || throw_error "An unknown error occured" 1
 
 . ./install.sh
+. ./utils.sh
 
-. "${VIRTUAL_ENV}/bin/activate"
+pnewline
+pinfo "Type '. $VIRTUAL_ENV/bin/activate' to activate the virtual environment"
