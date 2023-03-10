@@ -11,7 +11,7 @@ throw_error() {
 }
 
 timed_clone() {
-	timeout 10 "git clone $1"
+	timeout 10 git clone "$1"
 }
 
 if ! (timed_clone "git@github.com:qexat/PyVism.git" || timed_clone "https://github.com/qexat/PyVism.git"); then
