@@ -3,9 +3,9 @@ Intermediate Representation Instructions.
 """
 from typing import Any
 
-from pyvism.backend.tools import IdentifierLike
-from pyvism.backend.tools import mnemonic
-from pyvism.backend.tools import StreamIDLike
+from pyvism.frontend.tools import IdentifierLike
+from pyvism.frontend.tools import mnemonic
+from pyvism.frontend.tools import StreamIDLike
 
 
 @mnemonic("_UNARY_WT_MNEMONIC")

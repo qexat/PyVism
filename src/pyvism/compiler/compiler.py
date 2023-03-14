@@ -6,9 +6,7 @@ from typing import Any
 from typing import TextIO
 from typing import TypeVar
 
-from pyvism.backend.instructions import MEMCH
-from pyvism.backend.instructions import SWRITE
-from pyvism.backend.interface import get_pseudo_mnemonic
+from pyvism.backend.map import CompilationTarget
 from pyvism.compiler.macros import macro_map
 from pyvism.compiler.tools import CompilerState
 from pyvism.compiler.tools import is_identifier_defined
@@ -27,7 +25,9 @@ from pyvism.errsys.errors import E009
 from pyvism.errsys.errors import E010
 from pyvism.errsys.errors import E011
 from pyvism.errsys.tools import Error
-from pyvism.frontend.map import CompilationTarget
+from pyvism.frontend.instructions import MEMCH
+from pyvism.frontend.instructions import SWRITE
+from pyvism.frontend.interface import get_pseudo_mnemonic
 from pyvism.parser.tools import CARET_MODES
 from pyvism.parser.tools import DataStorageKind
 from pyvism.parser.tools import discarded_char
@@ -259,7 +259,7 @@ class Compiler:
         Return either a list of elements (instructions or LOC) or a list of errors.
         """
 
-        frontend = target.value
+        backend = target.value
 
         while not self.file.is_eof:
             while not self.file.is_eol:
@@ -286,7 +286,7 @@ class Compiler:
             self.process_buffered()
             self.file.move_next_line()
 
-        return Ok(frontend(self.state.ir))
+        return Ok(backend(self.state.ir))
 
 
 def compile(file: TextIO, target: CompilationTarget) -> Result[list[Any], list[Error]]:

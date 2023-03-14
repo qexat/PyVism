@@ -5,9 +5,9 @@ from builtins import divmod as _divmod
 from typing import Any
 from typing import TextIO
 
+from pyvism.backend.vmbc.tools import mnemonic
+from pyvism.backend.vmbc.tools import VMState
 from pyvism.compiler.tools import stream_endpoints
-from pyvism.frontend.vmbc.tools import mnemonic
-from pyvism.frontend.vmbc.tools import VMState
 
 
 def _get_stream(ms: VMState, fd: int) -> TextIO:
