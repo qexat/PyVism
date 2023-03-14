@@ -9,18 +9,18 @@ from result import Ok
 
 
 def run(file: TextIO) -> int:
-	"""
-	Convenient function to run a Vism file.
-	"""
+    """
+    Convenient function to run a Vism file.
+    """
 
-	vm = VM()
+    vm = VM()
 
-	match compile(file, CompilationTarget.Bytecode):
-		case Ok(bytecode):
-			vm.run(bytecode)
-			return 0
-		case Err(errors):
-			for error in errors:
-				error.throw()
-			report_abortion()
-			return 1
+    match compile(file, CompilationTarget.Bytecode):
+        case Ok(bytecode):
+            vm.run(bytecode)
+            return 0
+        case Err(errors):
+            for error in errors:
+                error.throw()
+            report_abortion()
+            return 1
