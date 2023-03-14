@@ -2,22 +2,27 @@
 Compiler macros. They are a special piece of Vism that are executed
 during compilation rather than runtime.
 """
+from shutil import get_terminal_size
+
 from pyvism.compiler.tools import CompilerState
 from pyvism.parser.tools import FileHandler
 from pyvism.parser.tools import MacroKind
+from pyvism.py_utils import light
 
 
-def debug(_: FileHandler, state: CompilerState) -> None:
-	"""
-	Prints the IR instructions of the code that was compiled since then.
-	"""
+def debug(file: FileHandler, state: CompilerState) -> None:
+    """
+    Prints the IR instructions of the code that was compiled since then.
+    """
 
-	print("\x1b[2m" + " DEBUG ".center(80, "=") + "\x1b[22m")
-	for instr in state.ir:
-		print(instr)
-	print("\x1b[2m" + "=" * 80 + "\x1b[22m")
+    cols, _ = get_terminal_size((80, 24))
+
+    print(light(" DEBUG ".center(cols, "=")))
+    for instr in state.ir:
+        print(instr)
+    print(light("+" * cols))
 
 
 macro_map = {
-	MacroKind.Debug: debug,
+    MacroKind.Debug: debug,
 }

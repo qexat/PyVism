@@ -10,31 +10,31 @@ from pyvism.backend.tools import StreamIDLike
 
 @mnemonic("_UNARY_WT_MNEMONIC")
 def _UNARY_WT_MNEMONIC(_: IdentifierLike) -> IdentifierLike:
-	...
+    ...
 
 
 @mnemonic("_BINARY_WT_MNEMONIC")
 def _BINARY_WT_MNEMONIC(_: IdentifierLike, __: IdentifierLike) -> IdentifierLike:
-	...
+    ...
 
 
 @mnemonic("_UNARY_NT_MNEMONIC")
 def _UNARY_NT_MNEMONIC(_: IdentifierLike) -> None:
-	...
+    ...
 
 
 @mnemonic("_BINARY_NT_MNEMONIC")
 def _BINARY_NT_MNEMONIC(_: IdentifierLike, __: IdentifierLike) -> None:
-	...
+    ...
 
 
 @mnemonic("_TERNARY_NT_MNEMONIC")
 def _TERNARY_NT_MNEMONIC(
-	_: IdentifierLike,
-	__: IdentifierLike,
-	___: IdentifierLike,
+    _: IdentifierLike,
+    __: IdentifierLike,
+    ___: IdentifierLike,
 ) -> None:
-	...
+    ...
 
 
 # UNARY WITH TARGET
@@ -54,7 +54,7 @@ _TERNARY_NT = _TERNARY_NT_MNEMONIC.similar
 
 @mnemonic("MEMCH")
 def MEMCH(_: Any) -> IdentifierLike:
-	...
+    ...
 
 
 # *- STREAM STUFF -* #
@@ -62,17 +62,17 @@ def MEMCH(_: Any) -> IdentifierLike:
 
 @mnemonic("SWRITE")
 def SWRITE(_: str) -> StreamIDLike:
-	...
+    ...
 
 
 @mnemonic("SFLUSH")
 def SFLUSH() -> StreamIDLike:
-	...
+    ...
 
 
 @mnemonic("PRINTV")
 def PRINTV(_: IdentifierLike) -> None:
-	...
+    ...
 
 
 # *- MATH -* #
