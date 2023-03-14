@@ -10,7 +10,7 @@ You can find the specification of the language [here](https://github.com/qexat/v
 
 ## Contributing
 
-See [CONTRIBUTING.md](./.github/CONTRIBUTING.md).
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## PyVism
 
