@@ -1,9 +1,9 @@
 """
-Contains a simple enum that lists the front-ends.
+Contains a simple enum that lists the backends.
 """
 from pyvism.backend import vmbc
 from pyvism.py_utils import MapLikeEnum
 
 
 class CompilationTarget(MapLikeEnum):
-    Bytecode = vmbc.frontend
+    Bytecode = vmbc.backend

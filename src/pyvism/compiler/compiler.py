@@ -259,7 +259,7 @@ class Compiler:
         Return either a list of elements (instructions or LOC) or a list of errors.
         """
 
-        frontend = target.value
+        backend = target.value
 
         while not self.file.is_eof:
             while not self.file.is_eol:
@@ -286,7 +286,7 @@ class Compiler:
             self.process_buffered()
             self.file.move_next_line()
 
-        return Ok(frontend(self.state.ir))
+        return Ok(backend(self.state.ir))
 
 
 def compile(file: TextIO, target: CompilationTarget) -> Result[list[Any], list[Error]]:

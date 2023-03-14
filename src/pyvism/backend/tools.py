@@ -1,5 +1,5 @@
 """
-Tools to build front-end objects.
+Tools to build backend objects.
 """
 from collections.abc import Callable
 from typing import Generic
@@ -12,9 +12,9 @@ from pyvism.frontend.tools import IRI
 T = TypeVar("T")
 
 
-class TargetFrontEnd(Generic[T]):
-    def __init__(self, frontend: Callable[[list[IRI[LiteralString]]], list[T]]) -> None:
-        self.frontend = frontend
+class TargetBackEnd(Generic[T]):
+    def __init__(self, backend: Callable[[list[IRI[LiteralString]]], list[T]]) -> None:
+        self.backend = backend
 
     def __call__(self, ir: list[IRI[LiteralString]]) -> list[T]:
-        return self.frontend(ir)
+        return self.backend(ir)

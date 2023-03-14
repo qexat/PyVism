@@ -1,6 +1,6 @@
 from typing import LiteralString
 
-from pyvism.backend.tools import TargetFrontEnd
+from pyvism.backend.tools import TargetBackEnd
 from pyvism.backend.vmbc.instructions import add
 from pyvism.backend.vmbc.instructions import divmod
 from pyvism.backend.vmbc.instructions import flush
@@ -34,9 +34,8 @@ from pyvism.frontend.instructions import UNION
 from pyvism.frontend.tools import IRI
 
 
-# PascalCase because FrontEnd is secretly a class
-@TargetFrontEnd
-def frontend(ir: list[IRI[LiteralString]]) -> list[AnyInstruction]:
+@TargetBackEnd
+def backend(ir: list[IRI[LiteralString]]) -> list[AnyInstruction]:
     bytecode: list[AnyInstruction] = []
 
     for iri in ir:
