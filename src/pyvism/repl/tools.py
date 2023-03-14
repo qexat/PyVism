@@ -6,10 +6,10 @@ from abc import abstractmethod
 from io import StringIO
 
 from pyvism import qtheme
+from pyvism.backend.map import CompilationTarget
 from pyvism.compiler.compiler import Compiler
 from pyvism.constants import REPL_PROMPT
 from pyvism.constants import REPL_SYNOPSIS
-from pyvism.frontend.map import CompilationTarget
 from pyvism.py_utils import color
 from pyvism.py_utils import color_rgb
 from pyvism.py_utils import ends_with_new_line

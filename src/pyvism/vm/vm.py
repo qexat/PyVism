@@ -7,8 +7,8 @@ from io import StringIO
 from os import linesep
 from typing import TextIO
 
-from pyvism.frontend.vmbc.tools import AnyInstruction
-from pyvism.frontend.vmbc.tools import VMState
+from pyvism.backend.vmbc.tools import AnyInstruction
+from pyvism.backend.vmbc.tools import VMState
 from pyvism.py_utils import bold
 from pyvism.py_utils import color
 from pyvism.py_utils import eprint

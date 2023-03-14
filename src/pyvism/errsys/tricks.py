@@ -4,11 +4,11 @@ Tricks to get values and skipping usual checks.
 from typing import Any
 from typing import LiteralString
 
-from pyvism.backend.interface import symbol_table
-from pyvism.backend.tools import IdentifierLike
-from pyvism.backend.tools import PseudoMnemonic
-from pyvism.backend.tools import StreamIDLike
 from pyvism.compiler.tools import CompilerState
+from pyvism.frontend.interface import symbol_table
+from pyvism.frontend.tools import IdentifierLike
+from pyvism.frontend.tools import PseudoMnemonic
+from pyvism.frontend.tools import StreamIDLike
 
 
 def get_buffer_eval_no_E002(state: CompilerState) -> Any:

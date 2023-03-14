@@ -11,13 +11,13 @@ from typing import LiteralString
 from typing import NamedTuple
 from typing import TypeGuard
 
-from pyvism.backend.tools import IdentifierLike
-from pyvism.backend.tools import IRI
-from pyvism.backend.tools import StreamIDLike
 from pyvism.compiler.types import MemoryValue
 from pyvism.compiler.types import UnsetType
 from pyvism.constants import REGISTER_MAX_ADDR
 from pyvism.errsys.tools import Error
+from pyvism.frontend.tools import IdentifierLike
+from pyvism.frontend.tools import IRI
+from pyvism.frontend.tools import StreamIDLike
 from pyvism.parser.tools import DataStorage
 from pyvism.parser.tools import DataStorageKind
 from pyvism.parser.tools import FileHandler

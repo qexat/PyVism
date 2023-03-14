@@ -6,9 +6,7 @@ from typing import Any
 from typing import TextIO
 from typing import TypeVar
 
-from pyvism.backend.instructions import MEMCH
-from pyvism.backend.instructions import SWRITE
-from pyvism.backend.interface import get_pseudo_mnemonic
+from pyvism.backend.map import CompilationTarget
 from pyvism.compiler.macros import macro_map
 from pyvism.compiler.tools import CompilerState
 from pyvism.compiler.tools import is_identifier_defined
@@ -27,7 +25,9 @@ from pyvism.errsys.errors import E009
 from pyvism.errsys.errors import E010
 from pyvism.errsys.errors import E011
 from pyvism.errsys.tools import Error
-from pyvism.frontend.map import CompilationTarget
+from pyvism.frontend.instructions import MEMCH
+from pyvism.frontend.instructions import SWRITE
+from pyvism.frontend.interface import get_pseudo_mnemonic
 from pyvism.parser.tools import CARET_MODES
 from pyvism.parser.tools import DataStorageKind
 from pyvism.parser.tools import discarded_char

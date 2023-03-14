@@ -4,22 +4,22 @@ Interface for front-ends to easily deal with IR.
 from typing import Any
 from typing import LiteralString
 
-from pyvism.backend.instructions import ADD
-from pyvism.backend.instructions import DIFF
-from pyvism.backend.instructions import DIVMOD
-from pyvism.backend.instructions import INTDIV
-from pyvism.backend.instructions import MODULO
-from pyvism.backend.instructions import MUL
-from pyvism.backend.instructions import PATHJOIN
-from pyvism.backend.instructions import PRINTV
-from pyvism.backend.instructions import REPLIC
-from pyvism.backend.instructions import SFLUSH
-from pyvism.backend.instructions import SUB
-from pyvism.backend.instructions import SWRITE
-from pyvism.backend.instructions import UNION
-from pyvism.backend.tools import PseudoMnemonic
 from pyvism.compiler.types import MemoryValue
 from pyvism.compiler.types import UnsetType
+from pyvism.frontend.instructions import ADD
+from pyvism.frontend.instructions import DIFF
+from pyvism.frontend.instructions import DIVMOD
+from pyvism.frontend.instructions import INTDIV
+from pyvism.frontend.instructions import MODULO
+from pyvism.frontend.instructions import MUL
+from pyvism.frontend.instructions import PATHJOIN
+from pyvism.frontend.instructions import PRINTV
+from pyvism.frontend.instructions import REPLIC
+from pyvism.frontend.instructions import SFLUSH
+from pyvism.frontend.instructions import SUB
+from pyvism.frontend.instructions import SWRITE
+from pyvism.frontend.instructions import UNION
+from pyvism.frontend.tools import PseudoMnemonic
 
 
 pseudo_mnemonics: list[PseudoMnemonic[LiteralString, Any, *tuple[Any, ...]]] = [
