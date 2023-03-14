@@ -32,8 +32,13 @@ You can also clone manually and run [`install.sh`](./install.sh).
 vism
 ```
 
-POSIX systems enjoy a better REPL, with a lot of fancy features.
-If you still want to start the universal version, use the `--force-universal` flag.
+**Options**
+
+-   `--force-universal`: (POSIX only) by default, POSIX systems enjoy a better REPL, with a lot of fancy features. This flag forces starting the universal version instead.<sup>1</sup>
+-   `--raise-python-exceptions`: by default, unhandled Python exceptions are silently ignored. This flag makes them raised.
+-   `--store-invalid-input`: by default, invalid inputs are not saved in the history. This flag makes them stored.
+
+<sup>1</sup> This flag has no effect on non-POSIX systems.
 
 ### Run a file
 
