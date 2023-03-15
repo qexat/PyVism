@@ -1,4 +1,4 @@
-&x ^sHello World!\n^n
+&x ^l "Hello World!\n" ^n
 $0 ^l "x" ^n
 p
-&x ^l64^n p!
+&x ^l 64 ^n p
