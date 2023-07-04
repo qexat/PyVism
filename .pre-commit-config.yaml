@@ -7,7 +7,7 @@ repos:
           - id: check-yaml
           - id: debug-statements
     - repo: https://github.com/asottile/setup-cfg-fmt
-      rev: v2.3.0
+      rev: v2.4.0
       hooks:
           - id: setup-cfg-fmt
     - repo: https://github.com/asottile/reorder-python-imports
@@ -16,7 +16,7 @@ repos:
           - id: reorder-python-imports
             args: [--py311-plus]
     - repo: https://github.com/asottile/add-trailing-comma
-      rev: v2.5.1
+      rev: v3.0.0
       hooks:
           - id: add-trailing-comma
             args: [--py36-plus]
